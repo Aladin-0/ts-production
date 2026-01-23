@@ -468,46 +468,46 @@ export const ProductDetailPage: React.FC = () => {
               Product Details
             </Typography>
             <Grid container spacing={3}>
-              <Grid item xs={6} sm={4} md={3}>
+              <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                 <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>Category</Typography>
                 <Typography sx={{ color: 'white', fontWeight: 500 }}>{product.category.name}</Typography>
               </Grid>
-              <Grid item xs={6} sm={4} md={3}>
+              <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                 <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>Stock</Typography>
                 <Typography sx={{ color: 'white', fontWeight: 500 }}>{product.stock} units</Typography>
               </Grid>
               {product.brand && (
-                <Grid item xs={6} sm={4} md={3}>
+                <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                   <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>Brand</Typography>
                   <Typography sx={{ color: 'white', fontWeight: 500 }}>{product.brand}</Typography>
                 </Grid>
               )}
               {product.model_number && (
-                <Grid item xs={6} sm={4} md={3}>
+                <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                   <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>Model</Typography>
                   <Typography sx={{ color: 'white', fontWeight: 500 }}>{product.model_number}</Typography>
                 </Grid>
               )}
               {product.warranty_period && (
-                <Grid item xs={6} sm={4} md={3}>
+                <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                   <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>Warranty</Typography>
                   <Typography sx={{ color: 'white', fontWeight: 500 }}>{product.warranty_period}</Typography>
                 </Grid>
               )}
               {product.dimensions && (
-                <Grid item xs={6} sm={4} md={3}>
+                <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                   <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>Dimensions</Typography>
                   <Typography sx={{ color: 'white', fontWeight: 500 }}>{product.dimensions}</Typography>
                 </Grid>
               )}
               {product.weight && (
-                <Grid item xs={6} sm={4} md={3}>
+                <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                   <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>Weight</Typography>
                   <Typography sx={{ color: 'white', fontWeight: 500 }}>{product.weight} kg</Typography>
                 </Grid>
               )}
               {product.delivery_time_info && (
-                <Grid item xs={6} sm={4} md={3}>
+                <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                   <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>Delivery</Typography>
                   <Typography sx={{ color: '#22c55e', fontWeight: 500 }}>{product.delivery_time_info}</Typography>
                 </Grid>
@@ -520,7 +520,7 @@ export const ProductDetailPage: React.FC = () => {
         <ContentContainer sx={{ pt: 0 }}>
           <Grid container spacing={4}>
             {/* Key Features */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <SpecCard sx={{ height: '100%', mt: 0 }}>
                 <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
                   <Typography variant="h6" sx={{ color: 'white', mb: 3, display: 'flex', alignItems: 'center' }}>
@@ -550,7 +550,7 @@ export const ProductDetailPage: React.FC = () => {
             </Grid>
 
             {/* Technical Specifications */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <SpecCard sx={{ height: '100%', mt: 0 }}>
                 <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
                   <Typography variant="h6" sx={{ color: 'white', mb: 3 }}>

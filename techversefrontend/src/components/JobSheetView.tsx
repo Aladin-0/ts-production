@@ -127,7 +127,7 @@ const StatusChip = styled(Chip)<{ status: string }>(({ status }) => {
         return { bg: 'rgba(156, 163, 175, 0.15)', color: '#9ca3af', border: 'rgba(156, 163, 175, 0.3)' };
     }
   };
-  
+
   const colors = getStatusColor();
   return {
     backgroundColor: colors.bg,
@@ -153,7 +153,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
 }) => {
   const { approveJobSheet, declineJobSheet, loading } = useJobSheetStore();
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const [showDeclineForm, setShowDeclineForm] = useState(false);
   const [declineReason, setDeclineReason] = useState('');
 
@@ -230,7 +230,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
         </Typography>
         <InfoCard>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Name
               </Typography>
@@ -238,7 +238,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                 {jobSheet.customer_name}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Contact
               </Typography>
@@ -249,7 +249,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Technician
               </Typography>
@@ -260,7 +260,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                 {jobSheet.technician_phone}
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 <LocationOnIcon sx={{ fontSize: '14px', mr: 0.5 }} />
                 Service Location
@@ -280,7 +280,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
         </Typography>
         <InfoCard>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Equipment Type
               </Typography>
@@ -288,7 +288,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                 {jobSheet.equipment_type}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Serial Number
               </Typography>
@@ -296,7 +296,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                 {jobSheet.serial_number || 'N/A'}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Brand/Make
               </Typography>
@@ -304,7 +304,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                 {jobSheet.equipment_brand || 'N/A'}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Model
               </Typography>
@@ -345,7 +345,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
         </Typography>
         <InfoCard>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Date
               </Typography>
@@ -353,7 +353,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                 {new Date(jobSheet.date_of_service).toLocaleDateString()}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Start Time
               </Typography>
@@ -361,7 +361,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                 {formatTime(jobSheet.start_time)}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Finish Time
               </Typography>
@@ -369,7 +369,7 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                 {formatTime(jobSheet.finish_time)}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 0.5 }}>
                 Total Time
               </Typography>
@@ -426,35 +426,35 @@ export const JobSheetView: React.FC<JobSheetViewProps> = ({
                     </TableCell>
                   </TableRow>
                 </TableHead>
-<TableBody>
-  {jobSheet.materials.map((material) => (
-    <TableRow key={material.id}>
-      <TableCell sx={{ color: 'white', border: 'none' }}>
-        {new Date(material.date_used).toLocaleDateString()}
-      </TableCell>
-      <TableCell sx={{ color: 'white', border: 'none' }}>
-        {material.item_description}
-      </TableCell>
-      <TableCell sx={{ color: 'white', border: 'none' }} align="right">
-        {material.quantity}
-      </TableCell>
-      <TableCell sx={{ color: 'white', border: 'none' }} align="right">
-        ₹{Number(material.unit_cost).toFixed(2)}
-      </TableCell>
-      <TableCell sx={{ color: 'white', border: 'none' }} align="right">
-        ₹{Number(material.total_cost).toFixed(2)}
-      </TableCell>
-    </TableRow>
-  ))}
-  <TableRow>
-    <TableCell colSpan={4} sx={{ color: '#60a5fa', fontWeight: 700, border: 'none' }} align="right">
-      Total Material Cost:
-    </TableCell>
-    <TableCell sx={{ color: '#22c55e', fontWeight: 700, fontSize: '16px', border: 'none' }} align="right">
-      ₹{Number(jobSheet.total_material_cost).toFixed(2)}
-    </TableCell>
-  </TableRow>
-</TableBody>
+                <TableBody>
+                  {jobSheet.materials.map((material) => (
+                    <TableRow key={material.id}>
+                      <TableCell sx={{ color: 'white', border: 'none' }}>
+                        {new Date(material.date_used).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell sx={{ color: 'white', border: 'none' }}>
+                        {material.item_description}
+                      </TableCell>
+                      <TableCell sx={{ color: 'white', border: 'none' }} align="right">
+                        {material.quantity}
+                      </TableCell>
+                      <TableCell sx={{ color: 'white', border: 'none' }} align="right">
+                        ₹{Number(material.unit_cost).toFixed(2)}
+                      </TableCell>
+                      <TableCell sx={{ color: 'white', border: 'none' }} align="right">
+                        ₹{Number(material.total_cost).toFixed(2)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  <TableRow>
+                    <TableCell colSpan={4} sx={{ color: '#60a5fa', fontWeight: 700, border: 'none' }} align="right">
+                      Total Material Cost:
+                    </TableCell>
+                    <TableCell sx={{ color: '#22c55e', fontWeight: 700, fontSize: '16px', border: 'none' }} align="right">
+                      ₹{Number(jobSheet.total_material_cost).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
               </Table>
             </TableContainer>
           </>

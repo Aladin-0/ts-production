@@ -354,7 +354,7 @@ export const UserProfilePage: React.FC = () => {
             </SectionHeader>
             <CardContent sx={{ p: { xs: 2.5, md: 4 } }}>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <PersonIcon sx={{ color: 'rgba(255, 255, 255, 0.6)' }} />
                     <Box>
@@ -367,7 +367,7 @@ export const UserProfilePage: React.FC = () => {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <EmailIcon sx={{ color: 'rgba(255, 255, 255, 0.6)' }} />
                     <Box>
@@ -380,7 +380,7 @@ export const UserProfilePage: React.FC = () => {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <PhoneIcon sx={{ color: 'rgba(255, 255, 255, 0.6)' }} />
                     <Box>
@@ -393,7 +393,7 @@ export const UserProfilePage: React.FC = () => {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <SecurityIcon sx={{ color: 'rgba(255, 255, 255, 0.6)' }} />
                     <Box>
@@ -444,7 +444,7 @@ export const UserProfilePage: React.FC = () => {
               ) : (
                 <Grid container spacing={3}>
                   {addresses.map((address) => (
-                    <Grid item xs={12} md={6} key={address.id}>
+                    <Grid size={{ xs: 12, md: 6 }} key={address.id}>
                       <AddressCard>
                         <CardContent sx={{ p: 3 }}>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -509,7 +509,7 @@ export const UserProfilePage: React.FC = () => {
             </SectionHeader>
             <CardContent sx={{ p: { xs: 2.5, md: 4 } }}>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -529,7 +529,7 @@ export const UserProfilePage: React.FC = () => {
                     }
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -549,7 +549,7 @@ export const UserProfilePage: React.FC = () => {
                     }
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Divider sx={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', my: 2 }} />
                   <PremiumButton
                     variant="outlined"
@@ -622,7 +622,7 @@ export const UserProfilePage: React.FC = () => {
               required
             />
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <PremiumTextField
                   label="City"
                   value={addressForm.city}
@@ -631,7 +631,7 @@ export const UserProfilePage: React.FC = () => {
                   required
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <PremiumTextField
                   label="State"
                   value={addressForm.state}

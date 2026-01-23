@@ -318,14 +318,14 @@ export const TechnicianDashboard: React.FC = () => {
           {/* MODIFIED: Adjusted spacing and font sizes to ensure 2x2 grid fits on mobile */}
           <Grid container spacing={{ xs: 1.5, md: 3 }} sx={{ mb: { xs: 3, md: 4 } }}>
             {statsItems.map((item, index) => (
-              <Grid item xs={6} md={3} key={index}>
+              <Grid size={{ xs: 6, md: 3 }} key={index}>
                 <StatsCard>
                   <CardContent sx={{ p: { xs: 2, md: 3 }, textAlign: 'center' }}>
                     <item.icon sx={{ fontSize: { xs: '28px', md: '48px' }, color: item.color, mb: 1 }} />
                     <Typography sx={{ color: item.color, fontWeight: 700, fontSize: { xs: '1.6rem', md: '2.5rem' }, lineHeight: 1.2 }}>
                       {item.value}
                     </Typography>
-                    <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: {xs: '12px', md: '14px'}, mt: 0.5 }}>
+                    <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: { xs: '12px', md: '14px' }, mt: 0.5 }}>
                       {item.label}
                     </Typography>
                   </CardContent>
@@ -349,36 +349,36 @@ export const TechnicianDashboard: React.FC = () => {
                     orders.filter(o => o.status !== 'DELIVERED').map((order) => (
                       <TaskCard key={order.id}>
                         <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                             <Box>
-                               <Typography sx={{ color: 'white', fontWeight: 600 }}>Order #{order.id}</Typography>
-                               <StatusChip label={order.status} status={order.status} size="small" />
-                             </Box>
-                             <Typography sx={{ color: '#60a5fa', fontWeight: 700, fontSize: '18px' }}>₹{order.total_amount}</Typography>
-                           </Box>
-                           <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.1)' }} />
-                           <Grid container spacing={2} sx={{ mb: 2 }}>
-                             <Grid item xs={12} sm={6}>
-                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
-                                 <PersonIcon color="action" fontSize="small" />
-                                 <Typography fontSize="14px">{order.customer_name}</Typography>
-                               </Box>
-                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                 <PhoneIcon color="action" fontSize="small" />
-                                 <Typography fontSize="14px">{order.customer_phone}</Typography>
-                               </Box>
-                             </Grid>
-                             <Grid item xs={12} sm={6}>
-                               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-                                 <LocationOnIcon color="action" fontSize="small" sx={{mt: 0.2}}/>
-                                 <Typography fontSize="14px">{order.shipping_address_details.street_address}, {order.shipping_address_details.city}</Typography>
-                               </Box>
-                             </Grid>
-                           </Grid>
-                            <PremiumButton className="success" fullWidth onClick={() => openConfirmDialog('order', order.id, `Order #${order.id}`)}>
-                               <CheckCircleIcon sx={{ mr: 1, fontSize: '16px' }} />
-                               Mark Delivered
-                            </PremiumButton>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                            <Box>
+                              <Typography sx={{ color: 'white', fontWeight: 600 }}>Order #{order.id}</Typography>
+                              <StatusChip label={order.status} status={order.status} size="small" />
+                            </Box>
+                            <Typography sx={{ color: '#60a5fa', fontWeight: 700, fontSize: '18px' }}>₹{order.total_amount}</Typography>
+                          </Box>
+                          <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.1)' }} />
+                          <Grid container spacing={2} sx={{ mb: 2 }}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
+                                <PersonIcon color="action" fontSize="small" />
+                                <Typography fontSize="14px">{order.customer_name}</Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                <PhoneIcon color="action" fontSize="small" />
+                                <Typography fontSize="14px">{order.customer_phone}</Typography>
+                              </Box>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                                <LocationOnIcon color="action" fontSize="small" sx={{ mt: 0.2 }} />
+                                <Typography fontSize="14px">{order.shipping_address_details.street_address}, {order.shipping_address_details.city}</Typography>
+                              </Box>
+                            </Grid>
+                          </Grid>
+                          <PremiumButton className="success" fullWidth onClick={() => openConfirmDialog('order', order.id, `Order #${order.id}`)}>
+                            <CheckCircleIcon sx={{ mr: 1, fontSize: '16px' }} />
+                            Mark Delivered
+                          </PremiumButton>
                         </CardContent>
                       </TaskCard>
                     ))
@@ -390,60 +390,61 @@ export const TechnicianDashboard: React.FC = () => {
                     serviceRequests.filter(s => s.status !== 'COMPLETED').map((service) => (
                       <TaskCard key={service.id}>
                         <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                             <Box>
-                               <Typography sx={{ color: 'white', fontWeight: 600 }}>Service #{service.id}</Typography>
-                               <StatusChip label={service.status} status={service.status} size="small" />
-                             </Box>
-                             <Chip label={service.service_category.name} size="small"/>
-                           </Box>
-                           <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.1)' }} />
-                           <Typography color="text.secondary" fontSize="12px" sx={{mb: 1}}>Issue:</Typography>
-                           <Typography fontSize="14px" sx={{mb: 2}}>{service.issue?.description || service.custom_description}</Typography>
-                           <Grid container spacing={2} sx={{ mb: 2 }}>
-                             <Grid item xs={12} sm={6}>
-                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
-                                 <PersonIcon color="action" fontSize="small" />
-                                 <Typography fontSize="14px">{service.customer.name}</Typography>
-                               </Box>
-                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                 <PhoneIcon color="action" fontSize="small" />
-                                 <Typography fontSize="14px">{service.customer.phone}</Typography>
-                               </Box>
-                             </Grid>
-                             <Grid item xs={12} sm={6}>
-                               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-                                 <LocationOnIcon color="action" fontSize="small" sx={{mt: 0.2}} />
-                                 <Typography fontSize="14px">{service.service_location.street_address}, {service.service_location.city}</Typography>
-                               </Box>
-                             </Grid>
-                           </Grid>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                            <Box>
+                              <Typography sx={{ color: 'white', fontWeight: 600 }}>Service #{service.id}</Typography>
+                              <StatusChip label={service.status} status={service.status} size="small" />
+                            </Box>
+                            <Chip label={service.service_category.name} size="small" />
+                          </Box>
+                          <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.1)' }} />
+                          <Typography color="text.secondary" fontSize="12px" sx={{ mb: 1 }}>Issue:</Typography>
+                          <Typography fontSize="14px" sx={{ mb: 2 }}>{service.issue?.description || service.custom_description}</Typography>
+                          <Grid container spacing={2} sx={{ mb: 2 }}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
+                                <PersonIcon color="action" fontSize="small" />
+                                <Typography fontSize="14px">{service.customer.name}</Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                <PhoneIcon color="action" fontSize="small" />
+                                <Typography fontSize="14px">{service.customer.phone}</Typography>
+                              </Box>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                                <LocationOnIcon color="action" fontSize="small" sx={{ mt: 0.2 }} />
+                                <Typography fontSize="14px">{service.service_location.street_address}, {service.service_location.city}</Typography>
+                              </Box>
+                            </Grid>
+                          </Grid>
 
-                           {service.has_job_sheet && (
-                            <Box sx={{ p: 1.5, mb: 2, borderRadius: 3, display: 'flex', alignItems: 'center', gap: 1.5,
-                                background: service.job_sheet_status === 'APPROVED' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(251, 191, 36, 0.1)',
-                                border: `1px solid ${service.job_sheet_status === 'APPROVED' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(251, 191, 36, 0.3)'}`
-                             }}>
-                              <DescriptionIcon fontSize="small" sx={{color: service.job_sheet_status === 'APPROVED' ? '#22c55e' : '#fbbf24'}}/>
-                              <Typography fontSize="13px" fontWeight="500" sx={{color: service.job_sheet_status === 'APPROVED' ? '#22c55e' : '#fbbf24'}}>
+                          {service.has_job_sheet && (
+                            <Box sx={{
+                              p: 1.5, mb: 2, borderRadius: 3, display: 'flex', alignItems: 'center', gap: 1.5,
+                              background: service.job_sheet_status === 'APPROVED' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(251, 191, 36, 0.1)',
+                              border: `1px solid ${service.job_sheet_status === 'APPROVED' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(251, 191, 36, 0.3)'}`
+                            }}>
+                              <DescriptionIcon fontSize="small" sx={{ color: service.job_sheet_status === 'APPROVED' ? '#22c55e' : '#fbbf24' }} />
+                              <Typography fontSize="13px" fontWeight="500" sx={{ color: service.job_sheet_status === 'APPROVED' ? '#22c55e' : '#fbbf24' }}>
                                 Job Sheet: {service.job_sheet_status === 'APPROVED' ? '✓ Approved' : '⏳ Pending Approval'}
                               </Typography>
                             </Box>
-                           )}
+                          )}
 
-                           <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 1.5 }}>
-                             {!service.has_job_sheet && (
-                               <PremiumButton fullWidth onClick={() => { setSelectedServiceForJobSheet(service); setJobSheetFormOpen(true); }}>
-                                 <DescriptionIcon sx={{ mr: 1, fontSize: '16px' }} />
-                                 Create Job Sheet
-                               </PremiumButton>
-                             )}
-                             <PremiumButton fullWidth className="success" onClick={() => openConfirmDialog('service', service.id, `Service #${service.id}`)}
-                               disabled={!service.has_job_sheet || service.job_sheet_status !== 'APPROVED'}>
-                               <CheckCircleIcon sx={{ mr: 1, fontSize: '16px' }} />
-                               Mark Completed
-                             </PremiumButton>
-                           </Box>
+                          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 1.5 }}>
+                            {!service.has_job_sheet && (
+                              <PremiumButton fullWidth onClick={() => { setSelectedServiceForJobSheet(service); setJobSheetFormOpen(true); }}>
+                                <DescriptionIcon sx={{ mr: 1, fontSize: '16px' }} />
+                                Create Job Sheet
+                              </PremiumButton>
+                            )}
+                            <PremiumButton fullWidth className="success" onClick={() => openConfirmDialog('service', service.id, `Service #${service.id}`)}
+                              disabled={!service.has_job_sheet || service.job_sheet_status !== 'APPROVED'}>
+                              <CheckCircleIcon sx={{ mr: 1, fontSize: '16px' }} />
+                              Mark Completed
+                            </PremiumButton>
+                          </Box>
                         </CardContent>
                       </TaskCard>
                     ))

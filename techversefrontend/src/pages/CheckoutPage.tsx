@@ -3,15 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { useCartStore } from '../stores/cartStore';
 import { useProductStore } from '../stores/productStore';
 import { useUserStore } from '../stores/userStore';
-import { 
-  Box, 
-  Typography, 
-  Button, 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  TextField, 
+import {
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
   Alert,
   Grid,
   Card,
@@ -180,7 +180,7 @@ const CheckoutPage: React.FC = () => {
   const { items, getTotalPrice, clearCart } = useCartStore();
   const { addresses, fetchAddresses } = useProductStore();
   const { user, isAuthenticated, checkAuthStatus } = useUserStore();
-  
+
   const [selectedAddress, setSelectedAddress] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
@@ -188,7 +188,7 @@ const CheckoutPage: React.FC = () => {
   const [missingFields, setMissingFields] = useState<string[]>([]);
   const [orderIds, setOrderIds] = useState<number[]>([]);
   const [authChecking, setAuthChecking] = useState(true);
-  
+
   // Profile completion dialog state
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [tempName, setTempName] = useState('');
@@ -201,40 +201,40 @@ const CheckoutPage: React.FC = () => {
       try {
         console.log('Checking authentication status...');
         console.log('Current auth state:', { isAuthenticated, user: user?.email });
-        
+
         // If not authenticated according to store, try to check auth status
         if (!isAuthenticated || !user) {
           console.log('User not authenticated, checking auth status...');
           await checkAuthStatus();
         }
-        
+
         // Give a moment for auth to update
         setTimeout(() => {
           const currentAuthState = useUserStore.getState();
-          console.log('Auth state after check:', { 
-            isAuthenticated: currentAuthState.isAuthenticated, 
-            user: currentAuthState.user?.email 
+          console.log('Auth state after check:', {
+            isAuthenticated: currentAuthState.isAuthenticated,
+            user: currentAuthState.user?.email
           });
-          
+
           if (!currentAuthState.isAuthenticated || !currentAuthState.user) {
             console.log('Redirecting to login - no valid auth found');
             window.location.href = '/login';
             return;
           }
-          
+
           if (items.length === 0) {
             console.log('Redirecting to store - no items in cart');
             window.location.href = '/store';
             return;
           }
-          
+
           // User is authenticated and has items, proceed with checkout
           console.log('User authenticated, proceeding with checkout');
           fetchAddresses();
           checkProfileCompletion();
           setAuthChecking(false);
         }, 1000);
-        
+
       } catch (error) {
         console.error('Error during checkout initialization:', error);
         setAuthChecking(false);
@@ -257,7 +257,7 @@ const CheckoutPage: React.FC = () => {
     try {
       const response = await apiClient.get('/api/users/profile/validate/');
       const { is_complete, missing_fields } = response.data;
-      
+
       if (!is_complete) {
         setProfileIncomplete(true);
         setMissingFields(missing_fields);
@@ -277,34 +277,34 @@ const CheckoutPage: React.FC = () => {
       alert('Please enter your name');
       return;
     }
-    
+
     if (!tempPhone.trim()) {
       alert('Please enter your phone number');
       return;
     }
-    
+
     // Validate phone number format
     const phoneRegex = /^[+]?[\d\s\-\(\)]{10,15}$/;
     if (!phoneRegex.test(tempPhone.trim())) {
       alert('Please enter a valid phone number');
       return;
     }
-    
+
     setProfileLoading(true);
     try {
       const response = await apiClient.patch('/api/users/profile/', {
         name: tempName.trim(),
         phone: tempPhone.trim()
       });
-      
+
       // Update the user store with new data
       useUserStore.setState({ user: response.data });
-      
+
       setProfileDialogOpen(false);
       setProfileIncomplete(false);
       setMissingFields([]);
       await checkProfileCompletion(); // Revalidate
-      
+
     } catch (error) {
       console.error('Error updating profile:', error);
       alert('Failed to update profile. Please try again.');
@@ -320,7 +320,7 @@ const CheckoutPage: React.FC = () => {
         setProfileDialogOpen(true);
         return;
       }
-      
+
       if (missingFields.includes('address')) {
         alert('Please add a delivery address from your profile before placing an order.');
         window.location.href = '/profile';
@@ -394,39 +394,39 @@ const CheckoutPage: React.FC = () => {
           padding: '40px',
         }}>
           <Box sx={{ maxWidth: '600px' }}>
-            <CheckCircleIcon sx={{ 
-              fontSize: '80px', 
-              color: '#22c55e', 
-              marginBottom: '24px' 
+            <CheckCircleIcon sx={{
+              fontSize: '80px',
+              color: '#22c55e',
+              marginBottom: '24px'
             }} />
-            
-            <Typography sx={{ 
-              fontSize: '36px', 
-              fontWeight: 700, 
-              marginBottom: '16px', 
-              color: '#22c55e' 
+
+            <Typography sx={{
+              fontSize: '36px',
+              fontWeight: 700,
+              marginBottom: '16px',
+              color: '#22c55e'
             }}>
               Order Placed Successfully!
             </Typography>
-            
-            <Typography sx={{ 
-              fontSize: '18px', 
-              color: 'rgba(255, 255, 255, 0.6)', 
+
+            <Typography sx={{
+              fontSize: '18px',
+              color: 'rgba(255, 255, 255, 0.6)',
               marginBottom: '32px',
               lineHeight: 1.6
             }}>
-              Thank you for your purchase! Your order{orderIds.length > 1 ? 's' : ''} 
-              {orderIds.length > 0 && ` (#${orderIds.join(', #')})`} 
-              {orderIds.length > 1 ? ' have' : ' has'} been confirmed. 
+              Thank you for your purchase! Your order{orderIds.length > 1 ? 's' : ''}
+              {orderIds.length > 0 && ` (#${orderIds.join(', #')})`}
+              {orderIds.length > 1 ? ' have' : ' has'} been confirmed.
               You'll receive updates via email and SMS.
             </Typography>
-            
+
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <PremiumButton onClick={() => window.location.href = '/my-orders'}>
                 <ShoppingCartIcon sx={{ mr: 1 }} />
                 View Orders
               </PremiumButton>
-              
+
               <Button
                 onClick={() => window.location.href = '/store'}
                 sx={{
@@ -465,9 +465,9 @@ const CheckoutPage: React.FC = () => {
       {/* Profile Incomplete Warning */}
       {profileIncomplete && (
         <Box sx={{ padding: { xs: '20px', sm: '20px 60px' } }}>
-          <Alert 
-            severity="warning" 
-            sx={{ 
+          <Alert
+            severity="warning"
+            sx={{
               backgroundColor: 'rgba(251, 191, 36, 0.15)',
               color: '#fbbf24',
               border: '1px solid rgba(251, 191, 36, 0.3)',
@@ -480,13 +480,13 @@ const CheckoutPage: React.FC = () => {
             <Typography sx={{ mb: 2 }}>
               Please complete your profile before placing an order. Missing: {missingFields.join(', ')}
             </Typography>
-            
+
             <Box sx={{ display: 'flex', gap: 1 }}>
               {!missingFields.includes('address') && (
-                <Button 
+                <Button
                   onClick={() => setProfileDialogOpen(true)}
                   size="small"
-                  sx={{ 
+                  sx={{
                     color: '#fbbf24',
                     textTransform: 'none',
                     fontWeight: 600,
@@ -499,12 +499,12 @@ const CheckoutPage: React.FC = () => {
                   Complete Now
                 </Button>
               )}
-              
+
               {missingFields.includes('address') && (
-                <Button 
+                <Button
                   onClick={() => window.location.href = '/profile'}
                   size="small"
-                  sx={{ 
+                  sx={{
                     color: '#fbbf24',
                     textTransform: 'none',
                     fontWeight: 600,
@@ -526,15 +526,15 @@ const CheckoutPage: React.FC = () => {
       <CheckoutContent>
         <ContentContainer>
           <Grid container spacing={4}>
-            
+
             {/* Left Column - Order Items & Address */}
-            <Grid item xs={12} lg={8}>
-              
+            <Grid size={{ xs: 12, lg: 8 }}>
+
               {/* Order Summary */}
               <SectionCard>
                 <CardContent sx={{ p: { xs: 2, sm: 4 } }}>
                   <SectionTitle>Order Summary</SectionTitle>
-                  
+
                   {items.map((item) => (
                     <OrderItemCard key={item.product.id}>
                       <Box sx={{
@@ -548,7 +548,7 @@ const CheckoutPage: React.FC = () => {
                         overflow: 'hidden',
                       }}>
                         {item.product.image ? (
-                          <img 
+                          <img
                             src={item.product.image.startsWith('http') ? item.product.image : `http://127.0.0.1:8000${item.product.image}`}
                             alt={item.product.name}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -559,7 +559,7 @@ const CheckoutPage: React.FC = () => {
                           </Typography>
                         )}
                       </Box>
-                      
+
                       <Box sx={{ flex: 1 }}>
                         <Typography sx={{ color: 'white', fontWeight: 500, mb: 0.5, fontSize: { xs: '14px', sm: '16px' } }}>
                           {item.product.name}
@@ -568,7 +568,7 @@ const CheckoutPage: React.FC = () => {
                           {item.product.category.name} • Quantity: {item.quantity}
                         </Typography>
                       </Box>
-                      
+
                       <Typography sx={{ color: '#60a5fa', fontWeight: 600, fontSize: { xs: '16px', sm: '18px' } }}>
                         ₹{(parseFloat(item.product.price) * item.quantity).toFixed(2)}
                       </Typography>
@@ -585,12 +585,12 @@ const CheckoutPage: React.FC = () => {
                       <HomeIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
                       Delivery Address
                     </SectionTitle>
-                    
+
                     {addresses.length > 0 && (
                       <Button
                         onClick={() => window.location.href = '/profile'}
                         size="small"
-                        sx={{ 
+                        sx={{
                           color: 'rgba(255, 255, 255, 0.7)',
                           textTransform: 'none',
                           '&:hover': { color: '#60a5fa' }
@@ -600,7 +600,7 @@ const CheckoutPage: React.FC = () => {
                       </Button>
                     )}
                   </Box>
-                  
+
                   {addresses.length === 0 ? (
                     <Box sx={{ textAlign: 'center', py: 4 }}>
                       <HomeIcon sx={{ fontSize: '48px', color: 'rgba(255, 255, 255, 0.3)', mb: 2 }} />
@@ -630,25 +630,25 @@ const CheckoutPage: React.FC = () => {
                             onChange={(e) => setSelectedAddress(e.target.value)}
                             style={{ marginTop: '4px' }}
                           />
-                          
+
                           <Box sx={{ flex: 1 }}>
                             {address.is_default && (
-                              <Chip 
-                                label="Default" 
-                                size="small" 
-                                sx={{ 
-                                  mb: 1, 
+                              <Chip
+                                label="Default"
+                                size="small"
+                                sx={{
+                                  mb: 1,
                                   backgroundColor: 'rgba(34, 197, 94, 0.15)',
                                   color: '#22c55e',
                                   border: '1px solid rgba(34, 197, 94, 0.3)'
-                                }} 
+                                }}
                               />
                             )}
-                            
+
                             <Typography sx={{ color: 'white', fontWeight: 500, mb: 0.5 }}>
                               {address.street_address}
                             </Typography>
-                            
+
                             <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>
                               {address.city}, {address.state} - {address.pincode}
                             </Typography>
@@ -662,11 +662,11 @@ const CheckoutPage: React.FC = () => {
             </Grid>
 
             {/* Right Column - Order Total */}
-            <Grid item xs={12} lg={4}>
+            <Grid size={{ xs: 12, lg: 4 }}>
               <SectionCard sx={{ position: 'sticky', top: '100px' }}>
                 <CardContent sx={{ p: 4 }}>
                   <SectionTitle sx={{ mb: 3 }}>Order Total</SectionTitle>
-                  
+
                   <Box sx={{ mb: 3 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                       <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
@@ -676,7 +676,7 @@ const CheckoutPage: React.FC = () => {
                         ₹{totalPrice.toFixed(2)}
                       </Typography>
                     </Box>
-                    
+
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                       <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
                         Delivery:
@@ -685,7 +685,7 @@ const CheckoutPage: React.FC = () => {
                         Free
                       </Typography>
                     </Box>
-                    
+
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                       <Typography sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
                         Tax:
@@ -695,11 +695,11 @@ const CheckoutPage: React.FC = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  
-                  <Box sx={{ 
-                    borderTop: '1px solid rgba(255, 255, 255, 0.1)', 
-                    pt: 2, 
-                    mb: 3 
+
+                  <Box sx={{
+                    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                    pt: 2,
+                    mb: 3
                   }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Typography sx={{ fontSize: '20px', fontWeight: 600, color: 'white' }}>
@@ -729,22 +729,22 @@ const CheckoutPage: React.FC = () => {
                       </>
                     )}
                   </PremiumButton>
-                  
+
                   {profileIncomplete && (
-                    <Typography sx={{ 
-                      fontSize: '12px', 
-                      color: 'rgba(255, 255, 255, 0.5)', 
-                      textAlign: 'center' 
+                    <Typography sx={{
+                      fontSize: '12px',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      textAlign: 'center'
                     }}>
                       Complete your profile to place order
                     </Typography>
                   )}
 
                   {addresses.length === 0 && (
-                    <Typography sx={{ 
-                      fontSize: '12px', 
-                      color: 'rgba(255, 255, 255, 0.5)', 
-                      textAlign: 'center' 
+                    <Typography sx={{
+                      fontSize: '12px',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      textAlign: 'center'
                     }}>
                       Add a delivery address to continue
                     </Typography>
@@ -772,7 +772,7 @@ const CheckoutPage: React.FC = () => {
           }
         }}
       >
-        <DialogTitle sx={{ 
+        <DialogTitle sx={{
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           display: 'flex',
           alignItems: 'center',
@@ -781,12 +781,12 @@ const CheckoutPage: React.FC = () => {
           <WarningIcon sx={{ color: '#fbbf24' }} />
           Complete Your Profile
         </DialogTitle>
-        
+
         <DialogContent sx={{ pt: 3 }}>
           <Typography sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.8)' }}>
             We need your name and phone number to process your order and provide delivery updates.
           </Typography>
-          
+
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             <PremiumTextField
               label="Full Name"
@@ -799,7 +799,7 @@ const CheckoutPage: React.FC = () => {
                 startAdornment: <PersonIcon sx={{ color: 'rgba(255, 255, 255, 0.6)', mr: 1 }} />
               }}
             />
-            
+
             <PremiumTextField
               label="Phone Number"
               value={tempPhone}
@@ -814,19 +814,19 @@ const CheckoutPage: React.FC = () => {
             />
           </Box>
         </DialogContent>
-        
+
         <DialogActions sx={{ p: 3, gap: 2 }}>
           <Button
             onClick={() => setProfileDialogOpen(false)}
             disabled={profileLoading}
-            sx={{ 
+            sx={{
               color: 'rgba(255, 255, 255, 0.7)',
               '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.05)' }
             }}
           >
             Cancel
           </Button>
-          
+
           <PremiumButton
             onClick={handleCompleteProfile}
             disabled={profileLoading || !tempName.trim() || !tempPhone.trim()}

@@ -239,13 +239,13 @@ export const JobSheetForm: React.FC<JobSheetFormProps> = ({
           Customer Information
         </Typography>
         <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <StyledTextField fullWidth label="Customer Name" value={serviceRequest.customer.name} disabled />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <StyledTextField fullWidth label="Contact" value={serviceRequest.customer.phone} disabled />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <StyledTextField fullWidth label="Service Address" value={`${serviceRequest.service_location.street_address}, ${serviceRequest.service_location.city}`} disabled multiline rows={2} />
           </Grid>
         </Grid>
@@ -256,10 +256,10 @@ export const JobSheetForm: React.FC<JobSheetFormProps> = ({
           Equipment Details
         </Typography>
         <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={12} sm={6}><StyledTextField fullWidth label="Equipment Type *" name="equipment_type" value={formData.equipment_type} onChange={handleInputChange} placeholder="e.g., Laptop, Printer" required /></Grid>
-          <Grid item xs={12} sm={6}><StyledTextField fullWidth label="Serial Number" name="serial_number" value={formData.serial_number} onChange={handleInputChange} /></Grid>
-          <Grid item xs={12} sm={6}><StyledTextField fullWidth label="Brand/Make" name="equipment_brand" value={formData.equipment_brand} onChange={handleInputChange} placeholder="e.g., HP, Dell, Canon" /></Grid>
-          <Grid item xs={12} sm={6}><StyledTextField fullWidth label="Model" name="equipment_model" value={formData.equipment_model} onChange={handleInputChange} /></Grid>
+          <Grid size={{ xs: 12, sm: 6 }}><StyledTextField fullWidth label="Equipment Type *" name="equipment_type" value={formData.equipment_type} onChange={handleInputChange} placeholder="e.g., Laptop, Printer" required /></Grid>
+          <Grid size={{ xs: 12, sm: 6 }}><StyledTextField fullWidth label="Serial Number" name="serial_number" value={formData.serial_number} onChange={handleInputChange} /></Grid>
+          <Grid size={{ xs: 12, sm: 6 }}><StyledTextField fullWidth label="Brand/Make" name="equipment_brand" value={formData.equipment_brand} onChange={handleInputChange} placeholder="e.g., HP, Dell, Canon" /></Grid>
+          <Grid size={{ xs: 12, sm: 6 }}><StyledTextField fullWidth label="Model" name="equipment_model" value={formData.equipment_model} onChange={handleInputChange} /></Grid>
         </Grid>
 
         <Divider sx={{ my: 3, backgroundColor: 'rgba(255, 255, 255, 0.1)' }} />
@@ -303,11 +303,11 @@ export const JobSheetForm: React.FC<JobSheetFormProps> = ({
             <MaterialRow key={index}>
               {/* MODIFIED: Grid items now have both `xs` and `sm` props for a responsive layout */}
               <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} sm={3}><StyledTextField fullWidth label="Date" type="date" value={material.date_used} onChange={(e) => handleMaterialChange(index, 'date_used', e.target.value)} InputLabelProps={{ shrink: true }} size="small" /></Grid>
-                <Grid item xs={12} sm={4}><StyledTextField fullWidth label="Item Description" value={material.item_description} onChange={(e) => handleMaterialChange(index, 'item_description', e.target.value)} size="small" /></Grid>
-                <Grid item xs={5} sm={2}><StyledTextField fullWidth label="Qty" type="number" value={material.quantity} onChange={(e) => handleMaterialChange(index, 'quantity', parseFloat(e.target.value) || 0)} size="small" /></Grid>
-                <Grid item xs={5} sm={2}><StyledTextField fullWidth label="Cost (₹)" type="number" value={material.unit_cost} onChange={(e) => handleMaterialChange(index, 'unit_cost', parseFloat(e.target.value) || 0)} size="small" /></Grid>
-                <Grid item xs={2} sm={1} sx={{ textAlign: 'right' }}><IconButton onClick={() => handleRemoveMaterial(index)} sx={{ color: '#ef4444' }}><DeleteIcon /></IconButton></Grid>
+                <Grid size={{ xs: 12, sm: 3 }}><StyledTextField fullWidth label="Date" type="date" value={material.date_used} onChange={(e) => handleMaterialChange(index, 'date_used', e.target.value)} InputLabelProps={{ shrink: true }} size="small" /></Grid>
+                <Grid size={{ xs: 12, sm: 4 }}><StyledTextField fullWidth label="Item Description" value={material.item_description} onChange={(e) => handleMaterialChange(index, 'item_description', e.target.value)} size="small" /></Grid>
+                <Grid size={{ xs: 5, sm: 2 }}><StyledTextField fullWidth label="Qty" type="number" value={material.quantity} onChange={(e) => handleMaterialChange(index, 'quantity', parseFloat(e.target.value) || 0)} size="small" /></Grid>
+                <Grid size={{ xs: 5, sm: 2 }}><StyledTextField fullWidth label="Cost (₹)" type="number" value={material.unit_cost} onChange={(e) => handleMaterialChange(index, 'unit_cost', parseFloat(e.target.value) || 0)} size="small" /></Grid>
+                <Grid size={{ xs: 2, sm: 1 }} sx={{ textAlign: 'right' }}><IconButton onClick={() => handleRemoveMaterial(index)} sx={{ color: '#ef4444' }}><DeleteIcon /></IconButton></Grid>
               </Grid>
               <Typography variant="body2" sx={{ mt: 1, color: 'rgba(255, 255, 255, 0.7)', textAlign: 'right' }}>
                 Total: ₹{(material.quantity * material.unit_cost).toFixed(2)}

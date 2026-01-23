@@ -395,7 +395,7 @@ export const OrdersPage: React.FC = () => {
             ) : (
               <Grid container spacing={3}>
                 {orders.map((order) => (
-                  <Grid item xs={12} key={order.id}>
+                  <Grid size={{ xs: 12 }} key={order.id}>
                     <OrderCard>
                       {/* Order Header */}
                       <OrderHeader>
@@ -503,7 +503,7 @@ export const OrdersPage: React.FC = () => {
                         <Grid container spacing={3}>
                           {/* Shipping Address */}
                           {order.shipping_address_details && (
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                               <Typography variant="subtitle2" sx={{
                                 fontWeight: 600,
                                 color: 'rgba(255, 255, 255, 0.9)',
@@ -536,7 +536,7 @@ export const OrdersPage: React.FC = () => {
 
                           {/* Technician Info */}
                           {order.technician_name && (
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                               <Typography variant="subtitle2" sx={{
                                 fontWeight: 600,
                                 color: 'rgba(255, 255, 255, 0.9)',
