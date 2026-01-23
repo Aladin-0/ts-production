@@ -713,7 +713,7 @@ export const ServiceRequestPage: React.FC = () => {
                   </Typography>
                   <Grid container spacing={2}>
                     {addresses.map((address) => (
-                      <Grid item xs={12} md={6} key={address.id}>
+                      <Grid xs={12} md={6} key={address.id}>
                         <AddressCard
                           selected={selectedAddress === address.id.toString()}
                           onClick={() => setSelectedAddress(address.id.toString())}

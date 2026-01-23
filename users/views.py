@@ -22,7 +22,6 @@ from .forms import CustomerRegistrationForm, AddressForm
 from .serializers import UserSerializer, UserProfileUpdateSerializer
 from store.models import Order
 from services.models import ServiceRequest, TechnicianRating
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from allauth.socialaccount.providers.google.views import oauth2_login
 
@@ -256,8 +255,9 @@ class GoogleJWTTokenView(APIView):
     
     def options(self, request, *args, **kwargs):
         """Handle preflight CORS requests"""
+        frontend_url = getattr(settings, 'FRONTEND_BASE_URL', 'http://localhost:5173')
         response = Response()
-        response["Access-Control-Allow-Origin"] = "http://localhost:5173"
+        response["Access-Control-Allow-Origin"] = frontend_url
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
         response["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
         response["Access-Control-Allow-Credentials"] = "true"
@@ -367,11 +367,12 @@ def google_login_success(request):
                                 refresh: '{refresh}'
                             }},
                             user: userData
-                        }}, '*');
+                        }}, '{getattr(settings, 'FRONTEND_BASE_URL', 'http://localhost:5173')}');
                         window.close();
                     }} else {{
                         // Fallback: redirect to React app with success parameter
-                        window.location.href = 'http://localhost:5173/?login=success&token=' + encodeURIComponent('{refresh.access_token}');
+                        const frontendUrl = '{getattr(settings, 'FRONTEND_BASE_URL', 'http://localhost:5173')}';
+                        window.location.href = frontendUrl + '/?login=success&token=' + encodeURIComponent('{refresh.access_token}');
                     }}
                 </script>
                 <p>Login successful! Redirecting...</p>
@@ -409,8 +410,10 @@ def mobile_google_callback(request):
     state = request.GET.get('state')
     code = request.GET.get('code')
     
+    frontend_url = getattr(settings, 'FRONTEND_BASE_URL', 'http://localhost:5173')
+    
     if not state or not code:
-        return HttpResponseRedirect('http://localhost:5173/login?error=oauth_failed')
+        return HttpResponseRedirect(f'{frontend_url}/login?error=oauth_failed')
     
     # Redirect to the standard allauth callback with proper headers
     callback_url = f"/accounts/google/login/callback/?state={state}&code={code}"

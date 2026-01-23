@@ -3,7 +3,7 @@ import axios from 'axios';
 // Helper to read cookie value by name
 function getCookie(name: string): string | null {
     if (typeof document === 'undefined') return null;
-    const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
+    const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + '=([^;]*)'));
     return match ? decodeURIComponent(match[1]) : null;
 }
 
@@ -27,7 +27,7 @@ apiClient.interceptors.request.use((config) => {
     if (unsafe && !token) {
         const csrfToken = getCookie('csrftoken');
         if (csrfToken) {
-            (config.headers as any)['X-CSRFToken'] = csrfToken;
+            config.headers['X-CSRFToken'] = csrfToken;
         }
     }
     return config;

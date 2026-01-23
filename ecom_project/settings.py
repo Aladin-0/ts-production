@@ -99,7 +99,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
-SITE_ID = 2
+SITE_ID = 1
 
 # ============= CRITICAL: DJANGO-ALLAUTH SETTINGS =============
 # This is THE KEY setting that fixes the "username" field error
