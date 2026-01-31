@@ -166,5 +166,5 @@ class OrderSerializer(serializers.ModelSerializer):
                 ).exists()
             )
         except Exception as e:
-            print(f"Error checking can_rate for order {obj.id}: {e}")
+
             return False

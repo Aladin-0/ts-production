@@ -18,7 +18,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { useCartStore } from '../stores/cartStore';
 import { useSnackbar } from 'notistack';
-import apiClient from '../api';
+import apiClient, { API_BASE_URL } from '../api';
 
 // Main page wrapper with top padding for fixed navbar
 const PageWrapper = styled(Box)({
@@ -349,7 +349,7 @@ export const ProductDetailPage: React.FC = () => {
 
   const formatImageUrl = (imageUrl: string) => {
     if (!imageUrl) return `https://via.placeholder.com/500x500/1a1a1a/ffffff?text=${encodeURIComponent(product.name)}`;
-    return imageUrl.startsWith('http') ? imageUrl : `http://127.0.0.1:8000${imageUrl}`;
+    return imageUrl.startsWith('http') ? imageUrl : `${API_BASE_URL}${imageUrl}`;
   };
 
   return (

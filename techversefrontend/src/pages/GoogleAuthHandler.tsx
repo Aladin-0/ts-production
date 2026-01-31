@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../stores/userStore';
 import { Box, Typography, CircularProgress } from '@mui/material';
+import { API_BASE_URL } from '../api';
 
 export const GoogleAuthHandler: React.FC = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export const GoogleAuthHandler: React.FC = () => {
         // For now, let's simulate getting user data
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
-        
+
         if (!code) {
           throw new Error('No authorization code received');
         }
@@ -30,7 +31,7 @@ export const GoogleAuthHandler: React.FC = () => {
         };
 
         // Send user data to your backend to create/login user
-        const response = await fetch('http://127.0.0.1:8000/api/users/create-from-google/', {
+        const response = await fetch(`${API_BASE_URL}/api/users/create-from-google/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -43,10 +44,10 @@ export const GoogleAuthHandler: React.FC = () => {
         }
 
         const data = await response.json();
-        
+
         // Store the JWT token
         localStorage.setItem('access_token', data.access);
-        
+
         // Update the user store
         useUserStore.setState({
           user: data.user,
@@ -55,7 +56,7 @@ export const GoogleAuthHandler: React.FC = () => {
 
         // Redirect to home page
         navigate('/', { replace: true });
-        
+
       } catch (error) {
         console.error('Google auth error:', error);
         navigate('/login', { replace: true });

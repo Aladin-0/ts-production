@@ -27,7 +27,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { styled } from '@mui/material/styles';
-import apiClient from '../api';
+import apiClient, { API_BASE_URL } from '../api';
 
 // Styled components matching your design system
 const PageWrapper = styled(Box)(({ theme }) => ({
@@ -199,37 +199,26 @@ const CheckoutPage: React.FC = () => {
   useEffect(() => {
     const initializeCheckout = async () => {
       try {
-        console.log('Checking authentication status...');
-        console.log('Current auth state:', { isAuthenticated, user: user?.email });
-
         // If not authenticated according to store, try to check auth status
         if (!isAuthenticated || !user) {
-          console.log('User not authenticated, checking auth status...');
           await checkAuthStatus();
         }
 
         // Give a moment for auth to update
         setTimeout(() => {
           const currentAuthState = useUserStore.getState();
-          console.log('Auth state after check:', {
-            isAuthenticated: currentAuthState.isAuthenticated,
-            user: currentAuthState.user?.email
-          });
 
           if (!currentAuthState.isAuthenticated || !currentAuthState.user) {
-            console.log('Redirecting to login - no valid auth found');
             window.location.href = '/login';
             return;
           }
 
           if (items.length === 0) {
-            console.log('Redirecting to store - no items in cart');
             window.location.href = '/store';
             return;
           }
 
           // User is authenticated and has items, proceed with checkout
-          console.log('User authenticated, proceeding with checkout');
           fetchAddresses();
           checkProfileCompletion();
           setAuthChecking(false);
@@ -549,7 +538,7 @@ const CheckoutPage: React.FC = () => {
                       }}>
                         {item.product.image ? (
                           <img
-                            src={item.product.image.startsWith('http') ? item.product.image : `http://127.0.0.1:8000${item.product.image}`}
+                            src={item.product.image.startsWith('http') ? item.product.image : `${API_BASE_URL}${item.product.image}`}
                             alt={item.product.name}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           />

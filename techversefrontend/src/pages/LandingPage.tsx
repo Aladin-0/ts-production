@@ -277,9 +277,10 @@ const ServiceCard = styled(Box)({
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'pointer',
-  transition: 'all 0.4s cubic-bezier(0.23, 1, 0.320, 1)',
+  transition: 'transform 0.4s cubic-bezier(0.23, 1, 0.320, 1), background 0.4s cubic-bezier(0.23, 1, 0.320, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.320, 1)',
   padding: '12px',
   position: 'relative',
+  willChange: 'transform',
   '&:hover': {
     transform: 'translateY(-8px)',
   },
@@ -313,10 +314,12 @@ const ServiceIconWrapper = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  justifyContent: 'center',
   marginBottom: '16px',
-  transition: 'all 0.4s cubic-bezier(0.23, 1, 0.320, 1)',
+  transition: 'transform 0.4s cubic-bezier(0.23, 1, 0.320, 1), background 0.4s cubic-bezier(0.23, 1, 0.320, 1), border-color 0.4s cubic-bezier(0.23, 1, 0.320, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.320, 1)',
   backdropFilter: 'blur(10px)',
   position: 'relative',
+  willChange: 'transform',
   overflow: 'hidden',
   boxShadow: `
     0 4px 12px rgba(0, 0, 0, 0.2),
@@ -1402,12 +1405,35 @@ export const LandingPage = () => {
 
   const CurrentModelComponent = models[currentModel];
 
+  // Optimization: Track visibility of hero section
+  const [heroVisible, setHeroVisible] = useState(true);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setHeroVisible(entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
+    }
+
+    return () => {
+      if (heroRef.current) {
+        observer.unobserve(heroRef.current);
+      }
+    };
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <PageWrapper>
 
         {/* ==================== HERO SECTION ==================== */}
-        <HeroSection>
+        <HeroSection ref={heroRef}>
           {/* Navigation Bar */}
           <Nav>
             {/* Logo and navigation removed - using main NavBar component */}
@@ -1441,8 +1467,11 @@ export const LandingPage = () => {
             {/* Right Side - 3D Model Canvas */}
             <CanvasWrapper>
               <Canvas
+                frameloop={heroVisible ? "always" : "never"}
+                dpr={[1, 1.5]}
                 style={{ width: '100%', height: '100%', overflow: 'visible' }}
                 camera={{ position: [10, 10, 10], fov: 55 }}
+                gl={{ powerPreference: 'high-performance' }}
               >
                 <Suspense fallback={null}>
                   <OrbitControls

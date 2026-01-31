@@ -168,6 +168,7 @@ export const NavBar = () => {
   const cleanNavigate = (path: string) => {
     setMenuExpanded(false);
     closeCart();
+    setProfileAnchor(null);
     navigate(path);
   };
 

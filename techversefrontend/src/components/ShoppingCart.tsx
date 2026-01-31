@@ -1,7 +1,7 @@
-// src/components/ShoppingCart.tsx - Fixed checkout navigation
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../stores/cartStore';
+import { API_BASE_URL } from '../api';
 
 interface CartIconButtonProps {
   onClick: () => void;
@@ -11,7 +11,7 @@ interface CartIconButtonProps {
 // Cart Icon Button Component
 export const CartIconButton: React.FC<CartIconButtonProps> = ({ onClick, totalItems }) => {
   return (
-    <button 
+    <button
       onClick={onClick}
       style={{
         position: 'relative',
@@ -33,7 +33,7 @@ export const CartIconButton: React.FC<CartIconButtonProps> = ({ onClick, totalIt
       }}
     >
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+        <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
       </svg>
       {totalItems > 0 && (
         <span style={{
@@ -92,7 +92,7 @@ export const ShoppingCart: React.FC = () => {
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         onClick={closeCart}
         style={{
           position: 'fixed',
@@ -104,7 +104,7 @@ export const ShoppingCart: React.FC = () => {
           zIndex: 1000,
         }}
       />
-      
+
       {/* Drawer */}
       <div
         style={{
@@ -140,7 +140,7 @@ export const ShoppingCart: React.FC = () => {
             gap: '12px',
           }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+              <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
             </svg>
             Shopping Cart ({totalItems})
           </div>
@@ -156,7 +156,7 @@ export const ShoppingCart: React.FC = () => {
             }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
             </svg>
           </button>
         </div>
@@ -174,7 +174,7 @@ export const ShoppingCart: React.FC = () => {
               textAlign: 'center',
             }}>
               <svg width="64" height="64" viewBox="0 0 24 24" fill="rgba(255, 255, 255, 0.3)" style={{ marginBottom: '16px' }}>
-                <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
               </svg>
               <div style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '18px', fontWeight: '500', marginBottom: '8px' }}>
                 Your cart is empty
@@ -228,11 +228,11 @@ export const ShoppingCart: React.FC = () => {
                       overflow: 'hidden',
                     }}>
                       {item.product.image ? (
-                        <img 
+                        <img
                           src={
                             item.product.image.startsWith('http')
                               ? item.product.image
-                              : `http://127.0.0.1:8000${item.product.image}`
+                              : `${API_BASE_URL}${item.product.image}`
                           }
                           alt={item.product.name}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -292,7 +292,7 @@ export const ShoppingCart: React.FC = () => {
                         }}
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                         </svg>
                       </button>
 
@@ -312,7 +312,7 @@ export const ShoppingCart: React.FC = () => {
                           }}
                         >
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 13H5v-2h14v2z"/>
+                            <path d="M19 13H5v-2h14v2z" />
                           </svg>
                         </button>
                         <span style={{
@@ -342,7 +342,7 @@ export const ShoppingCart: React.FC = () => {
                           }}
                         >
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                           </svg>
                         </button>
                       </div>

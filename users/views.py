@@ -113,7 +113,7 @@ class UserProfileUpdateView(APIView):
 
     def patch(self, request):
         """Update user profile"""
-        print(f"Received profile update data: {request.data}")
+
         
         serializer = UserProfileUpdateSerializer(
             request.user, 
@@ -123,13 +123,13 @@ class UserProfileUpdateView(APIView):
         
         if serializer.is_valid():
             user = serializer.save()
-            print(f"User updated successfully: {user.name}, {user.phone}")
+
             
             # Return updated user data
             updated_serializer = UserSerializer(user)
             return Response(updated_serializer.data)
         
-        print(f"Serializer errors: {serializer.errors}")
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangePasswordView(APIView):
@@ -225,10 +225,7 @@ class GoogleJWTTokenView(APIView):
     permission_classes = []  # No auth required since we're checking session
     
     def get(self, request):
-        print(f"Session authenticated: {request.user.is_authenticated}")
-        print(f"User: {request.user}")
-        print(f"Session key: {request.session.session_key}")
-        print(f"Cookies: {request.COOKIES}")
+
         
         # Check if user is authenticated via session (from Google OAuth)
         if not request.user.is_authenticated:

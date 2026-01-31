@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import axios from 'axios';
-import apiClient from '../api';
+import apiClient, { API_BASE_URL } from '../api';
 
 // Define the shape of a single product
 interface Product {
@@ -43,12 +43,12 @@ export const useProductStore = create<ProductState>((set) => ({
   addresses: [],
   fetchProducts: async () => {
     try {
-      console.log('Fetching products...');
+
       // Use direct axios for public endpoints
-      const response = await axios.get('http://127.0.0.1:8000/api/products/', {
+      const response = await axios.get(`${API_BASE_URL}/api/products/`, {
         timeout: 5000
       });
-      console.log('Products response:', response.data);
+
       set({ products: response.data });
     } catch (error) {
       console.error("Failed to fetch products:", error);
@@ -58,9 +58,9 @@ export const useProductStore = create<ProductState>((set) => ({
   },
   fetchAddresses: async () => {
     try {
-      console.log('Fetching addresses...');
+
       const response = await apiClient.get('/api/addresses/');
-      console.log('Addresses response:', response.data);
+
       set({ addresses: response.data });
     } catch (error) {
       console.error("Failed to fetch addresses:", error);

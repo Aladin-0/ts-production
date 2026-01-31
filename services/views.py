@@ -178,8 +178,7 @@ def create_rating(request):
         order_id = data.get('order_id')
         service_request_id = data.get('service_request_id')
         
-        print(f"Rating submission attempt by user {request.user.id}")
-        print(f"Data received: {data}")
+
         
         # Validation
         if not rating_value or rating_value not in [1, 2, 3, 4, 5]:
@@ -238,7 +237,7 @@ def create_rating(request):
                 comment=comment
             )
             
-            print(f"Rating created successfully: {rating.id}")
+
             
             return Response({
                 'message': 'Rating submitted successfully',
@@ -295,7 +294,7 @@ def create_rating(request):
                 comment=comment
             )
             
-            print(f"Service rating created successfully: {rating.id}")
+
             
             return Response({
                 'message': 'Rating submitted successfully',
@@ -309,9 +308,7 @@ def create_rating(request):
             }, status=status.HTTP_201_CREATED)
             
     except Exception as e:
-        print(f"Error in create_rating: {str(e)}")
-        import traceback
-        traceback.print_exc()
+
         return Response(
             {'error': f'An error occurred: {str(e)}'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -353,7 +350,7 @@ def get_user_ratings(request):
         })
         
     except Exception as e:
-        print(f"Error in get_user_ratings: {str(e)}")
+
         return Response(
             {'error': f'An error occurred: {str(e)}'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -450,9 +447,7 @@ def create_job_sheet(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     except Exception as e:
-        print(f"Error creating job sheet: {str(e)}")
-        import traceback
-        traceback.print_exc()
+
         return Response(
             {'error': f'An error occurred: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -490,7 +485,7 @@ def get_job_sheets(request):
         return Response(serializer.data)
         
     except Exception as e:
-        print(f"Error fetching job sheets: {str(e)}")
+
         return Response(
             {'error': f'An error occurred: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -540,7 +535,7 @@ def get_job_sheet_detail(request, job_sheet_id):
             status=status.HTTP_404_NOT_FOUND
         )
     except Exception as e:
-        print(f"Error fetching job sheet: {str(e)}")
+
         return Response(
             {'error': f'An error occurred: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -589,7 +584,7 @@ def approve_job_sheet(request, job_sheet_id):
             status=status.HTTP_404_NOT_FOUND
         )
     except Exception as e:
-        print(f"Error approving job sheet: {str(e)}")
+
         return Response(
             {'error': f'An error occurred: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -641,7 +636,7 @@ def decline_job_sheet(request, job_sheet_id):
             status=status.HTTP_404_NOT_FOUND
         )
     except Exception as e:
-        print(f"Error declining job sheet: {str(e)}")
+
         return Response(
             {'error': f'An error occurred: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -705,9 +700,7 @@ def complete_service_request(request, service_id):
         )
         
     except Exception as e:
-        print(f"Error completing service: {str(e)}")
-        import traceback
-        traceback.print_exc()
+
         return Response(
             {'error': f'An error occurred: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR

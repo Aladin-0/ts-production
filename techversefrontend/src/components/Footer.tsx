@@ -1,5 +1,5 @@
 // src/components/Footer.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Typography, Grid, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -10,9 +10,6 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { TermsModal } from './TermsModal';
-import { PrivacyModal } from './PrivacyModal';
-import { CookieModal } from './CookieModal';
 
 const FooterWrapper = styled(Box)({
   background: 'linear-gradient(135deg, #0a0a0a 0%, #000000 100%)',
@@ -196,9 +193,6 @@ const PaymentIcon = styled(Box)({
 
 export const Footer: React.FC = () => {
   const navigate = useNavigate();
-  const [termsOpen, setTermsOpen] = useState(false);
-  const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [cookieOpen, setCookieOpen] = useState(false);
 
   return (
     <FooterWrapper>
@@ -229,7 +223,7 @@ export const Footer: React.FC = () => {
           </Grid>
 
           {/* Quick Links */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <FooterSection>
               <Typography variant="h4">Quick Links</Typography>
               <FooterLink onClick={() => navigate('/')}>Home</FooterLink>
@@ -241,7 +235,7 @@ export const Footer: React.FC = () => {
           </Grid>
 
           {/* Categories */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <FooterSection>
               <Typography variant="h4">Categories</Typography>
               <FooterLink onClick={() => navigate('/store?category=Laptop%20%2F%20PC')}>
@@ -263,24 +257,24 @@ export const Footer: React.FC = () => {
           </Grid>
 
           {/* Contact */}
-          <Grid item xs={12} sm={12} md={3}>
+          <Grid size={{ xs: 12, sm: 12, md: 3 }}>
             <FooterSection>
               <Typography variant="h4">Get In Touch</Typography>
               <ContactItem href="mailto:support@techverse.com">
                 <EmailIcon />
                 <span>support@techverse.com</span>
               </ContactItem>
-              <ContactItem href="tel:+15551234567">
+              <ContactItem href="tel:+918805147490">
                 <PhoneIcon />
-                <span>+1 (555) 123-4567</span>
+                <span>+91 8805147490</span>
               </ContactItem>
-              <ContactItem 
-                href="https://www.google.com/maps/search/?api=1&query=123+Tech+Street+Innovation+City+TC+12345" 
+              <ContactItem
+                href="https://www.google.com/maps/search/?api=1&query=123+Tech+Street+Innovation+City+TC+12345"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <LocationOnIcon />
-                <span>123 Tech Street, Innovation City, TC 12345</span>
+                <span>Chhatrapati Sambhajinagar, 431003</span>
               </ContactItem>
             </FooterSection>
           </Grid>
@@ -292,14 +286,17 @@ export const Footer: React.FC = () => {
           © {new Date().getFullYear()} TechVerse. All rights reserved.
         </CopyrightText>
         <Box sx={{ display: 'flex', gap: '20px', '@media (max-width:900px)': { flexDirection: 'column', gap: '10px', alignItems: 'center' } }}>
-          <FooterLink onClick={() => setPrivacyOpen(true)} style={{ display: 'inline', margin: 0, fontSize: '12px' }}>
+          <FooterLink onClick={() => navigate('/privacy-policy')} style={{ display: 'inline', margin: 0, fontSize: '12px' }}>
             Privacy Policy
           </FooterLink>
-          <FooterLink onClick={() => setTermsOpen(true)} style={{ display: 'inline', margin: 0, fontSize: '12px' }}>
-            Terms of Service
+          <FooterLink onClick={() => navigate('/return-policy')} style={{ display: 'inline', margin: 0, fontSize: '12px' }}>
+            Return Policy
           </FooterLink>
-          <FooterLink onClick={() => setCookieOpen(true)} style={{ display: 'inline', margin: 0, fontSize: '12px' }}>
-            Cookie Policy
+          <FooterLink onClick={() => navigate('/refund-policy')} style={{ display: 'inline', margin: 0, fontSize: '12px' }}>
+            Refund Policy
+          </FooterLink>
+          <FooterLink onClick={() => navigate('/shipping-policy')} style={{ display: 'inline', margin: 0, fontSize: '12px' }}>
+            Shipping Policy
           </FooterLink>
         </Box>
         <PaymentIcons>
@@ -308,12 +305,7 @@ export const Footer: React.FC = () => {
           <PaymentIcon>AMEX</PaymentIcon>
         </PaymentIcons>
       </FooterBottom>
-
-      {/* All Modals */}
-      <TermsModal open={termsOpen} onClose={() => setTermsOpen(false)} />
-      <PrivacyModal open={privacyOpen} onClose={() => setPrivacyOpen(false)} />
-      <CookieModal open={cookieOpen} onClose={() => setCookieOpen(false)} />
-    </FooterWrapper>
+    </FooterWrapper >
   );
 };
 

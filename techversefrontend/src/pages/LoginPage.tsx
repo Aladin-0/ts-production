@@ -1,9 +1,9 @@
 // src/pages/LoginPage.tsx - Updated with custom Google login URL
 import { useState, useEffect } from 'react';
 import { Container, Typography, Button, Box, Tabs, Tab, TextField, Alert } from '@mui/material';
-import apiClient from '../api';
+import apiClient, { API_BASE_URL } from '../api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useUserStore } from '../stores/userStore'; 
+import { useUserStore } from '../stores/userStore';
 
 export const LoginPage = () => {
     const [tab, setTab] = useState(0);
@@ -51,23 +51,23 @@ export const LoginPage = () => {
         }
         try {
             // Ensure CSRF cookie is set before unsafe POST (session-based)
-            try { await apiClient.get('/api/users/csrf/'); } catch {}
-            const response = await apiClient.post('/api/auth/registration/', { 
+            try { await apiClient.get('/api/users/csrf/'); } catch { }
+            const response = await apiClient.post('/api/auth/registration/', {
                 email,
                 name,
                 password1: password,
                 password2: password2
             });
-            
+
             // Store the token
             localStorage.setItem('access_token', response.data.access);
-            
+
             // Update user store
             useUserStore.setState({
                 user: response.data.user,
                 isAuthenticated: true
             });
-            
+
             navigate('/');
         } catch (err: any) {
             // Surface common field errors first, then fall back to flattening unknown errors
@@ -83,7 +83,7 @@ export const LoginPage = () => {
 
     const handleGoogleLogin = () => {
         // Use the custom Google login endpoint that forces account selection
-        window.location.href = "http://127.0.0.1:8000/auth/google/login/";
+        window.location.href = `${API_BASE_URL}/auth/google/login/`;
     };
 
     return (

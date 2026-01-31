@@ -25,6 +25,7 @@ import { useSpring, animated, useTrail } from '@react-spring/web';
 import { useProductStore } from '../stores/productStore';
 import { useCartStore } from '../stores/cartStore';
 import { useSnackbar } from 'notistack';
+import { API_BASE_URL } from '../api';
 
 const PageWrapper = styled(Box)({
   backgroundColor: '#000000',
@@ -990,7 +991,7 @@ export const StorePage: React.FC = () => {
               <ProductCard key={product.id}>
                 <ProductImageArea onClick={() => handleViewDetails(product)}>
                   <img
-                    src={product.image ? (product.image.startsWith('http') ? product.image : `http://127.0.0.1:8000${product.image}`) : `https://via.placeholder.com/300x300/333333/ffffff?text=${encodeURIComponent(product.name)}`}
+                    src={product.image ? (product.image.startsWith('http') ? product.image : `${API_BASE_URL}${product.image}`) : `https://via.placeholder.com/300x300/333333/ffffff?text=${encodeURIComponent(product.name)}`}
                     alt={product.name}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -1049,8 +1050,10 @@ export const StorePage: React.FC = () => {
       <Footer>
         <FooterLogo>TECHVERSE</FooterLogo>
         <FooterLinks>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
+          <a href="/return-policy">Return Policy</a>
+          <a href="/refund-policy">Refund Policy</a>
+          <a href="/shipping-policy">Shipping Policy</a>
+          <a href="/privacy-policy">Privacy Policy</a>
         </FooterLinks>
         <SocialIcons>
           <FacebookIcon />

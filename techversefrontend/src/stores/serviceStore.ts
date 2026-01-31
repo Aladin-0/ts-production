@@ -26,36 +26,36 @@ export const useServiceStore = create<ServiceState>((set) => ({
   categories: [],
   loading: false,
   error: null,
-  
+
   fetchCategories: async () => {
     set({ loading: true, error: null });
     try {
-      console.log('Fetching service categories...');
-      
+
+
       // Use apiClient instead of direct axios to include auth headers
       const response = await apiClient.get('/services/api/categories/', {
         timeout: 5000
       });
-      
-      console.log('Service categories response:', response.data);
-      
+
+
+
       // Validate response data
       if (!Array.isArray(response.data)) {
         throw new Error('Invalid response format: expected array');
       }
-      
-      set({ 
+
+      set({
         categories: response.data,
         loading: false,
         error: null
       });
     } catch (error: any) {
       console.error("Failed to fetch service categories:", error);
-      const errorMessage = error?.response?.data?.error || 
-                          error?.message || 
-                          'Failed to load service categories';
-      set({ 
-        categories: [], 
+      const errorMessage = error?.response?.data?.error ||
+        error?.message ||
+        'Failed to load service categories';
+      set({
+        categories: [],
         loading: false,
         error: errorMessage
       });

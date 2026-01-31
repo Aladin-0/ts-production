@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'ecom_project.context_processors.frontend_url',
             ],
         },
     },
@@ -191,6 +192,17 @@ CORS_ALLOWED_HEADERS = [
     'cache-control',
 ]
 
+# ============= CSRF SETTINGS =============
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:5173',
+    'http://localhost:5173',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]
+CSRF_COOKIE_HTTPONLY = False  # Allow JS to read the cookie
+
 # ============= AUTHENTICATION BACKENDS =============
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -198,7 +210,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # ============= REDIRECT URLs =============
-LOGIN_REDIRECT_URL = 'http://127.0.0.1:5173/'
+# LOGIN_REDIRECT_URL = 'http://127.0.0.1:5173/'
 FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'http://localhost:5173')
 LOGIN_REDIRECT_URL = None  # Don't use default redirect, force adapter
 

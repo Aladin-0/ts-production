@@ -178,7 +178,7 @@ class Order(models.Model):
                     total += item_total
             return total
         except Exception as e:
-            print(f"Error calculating total amount for order {self.id}: {e}")
+
             return Decimal('0.00')
 
 class OrderItem(models.Model):
@@ -202,17 +202,17 @@ class OrderItem(models.Model):
                     self.price = item_price
                     self.save(update_fields=['price'])
                 else:
-                    print(f"Warning: No price found for OrderItem {self.id} (Product: {self.product})")
+
                     return Decimal('0.00')
             
             if self.quantity and item_price:
                 return Decimal(str(self.quantity)) * Decimal(str(item_price))
             else:
-                print(f"Warning: Invalid quantity ({self.quantity}) or price ({item_price}) for OrderItem {self.id}")
+
                 return Decimal('0.00')
                 
         except Exception as e:
-            print(f"Error calculating total for OrderItem {self.id}: {e}")
+
             return Decimal('0.00')
     
     def save(self, *args, **kwargs):

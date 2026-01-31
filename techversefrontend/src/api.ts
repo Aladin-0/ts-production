@@ -7,8 +7,11 @@ function getCookie(name: string): string | null {
     return match ? decodeURIComponent(match[1]) : null;
 }
 
+// Helper to get API URL from env
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
 const apiClient = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
+    baseURL: API_BASE_URL,
     withCredentials: true, // CRITICAL: Include cookies for session auth
     headers: {
         'Content-Type': 'application/json',
@@ -43,7 +46,7 @@ apiClient.interceptors.response.use(
             const token = localStorage.getItem('access_token');
             if (token) {
                 localStorage.removeItem('access_token');
-                console.log('JWT token expired, trying session auth...');
+
             }
         }
         return Promise.reject(error);
