@@ -33,7 +33,7 @@ export const useServiceStore = create<ServiceState>((set) => ({
 
 
       // Use apiClient instead of direct axios to include auth headers
-      const response = await apiClient.get('/services/api/categories/', {
+      const response = await apiClient.get('/api/categories/', {
         timeout: 5000
       });
 

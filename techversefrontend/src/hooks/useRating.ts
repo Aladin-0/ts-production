@@ -29,7 +29,7 @@ export const useRating = (): UseRatingResult => {
 
 
       // Try the correct endpoint path
-      const response = await apiClient.post('/services/api/ratings/create/', data);
+      const response = await apiClient.post('/api/ratings/create/', data);
 
 
 

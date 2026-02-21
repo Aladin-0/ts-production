@@ -111,7 +111,7 @@ export const RefundPolicyPage: React.FC = () => {
                         <li><strong>Net Banking:</strong> Typically processed within 5-7 business days.</li>
                     </ul>
                     <p>
-                        If more than 15 business days have passed since we approved your return and you still have not received your refund, please contact us at support@techverse.com.
+                        If more than 15 business days have passed since we approved your return and you still have not received your refund, please contact us at contact@techverseservices.in.
                     </p>
                 </Section>
 

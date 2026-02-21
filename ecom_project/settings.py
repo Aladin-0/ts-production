@@ -13,7 +13,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security settings from environment variables
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-jbx!=0@9n*(ptklw&c4y#as-yw3yzsd80d8vi9nv!rj+31^^mt')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '182.70.63.4',
+    'techverseservices.in',
+    'www.techverseservices.in',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,7 +67,7 @@ ROOT_URLCONF = 'ecom_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,10 +84,15 @@ WSGI_APPLICATION = 'ecom_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'techverse_db'),
+        'USER': os.environ.get('DB_USER', 'techverse_user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'db'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -96,9 +107,10 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -126,7 +138,7 @@ SOCIALACCOUNT_STORE_TOKENS = True
 SOCIALACCOUNT_QUERY_EMAIL = True
 
 # CRITICAL CHANGES - These prevent the intermediate page
-SOCIALACCOUNT_LOGIN_ON_GET = True  # Changed back to True - but with process set to login
+SOCIALACCOUNT_LOGIN_ON_GET =  False # Changed back to True - but with process set to login
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -140,7 +152,6 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
         'VERIFIED_EMAIL': True,
         'VERSION': 'v2',
-        'REDIRECT_URI_PROTOCOL': 'http',
         'APP': {
             'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
             'secret': os.environ.get('GOOGLE_CLIENT_SECRET'),
@@ -185,8 +196,9 @@ SIMPLE_JWT = {
 # ============= CORS SETTINGS =============
 CORS_ALLOWED_ORIGINS = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
-    'http://127.0.0.1:5173,http://localhost:5173'
+    'https://techverseservices.in,https://www.techverseservices.in,http://127.0.0.1:5173,http://localhost:5173'
 ).split(',')
+
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_HEADERS = [
@@ -211,7 +223,9 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
     'https://techverseservices.in',
+    'https://www.techverseservices.in',
     'http://techverseservices.in',
+    'http://www.techverseservices.in',
     'http://182.70.63.4',
     'https://182.70.63.4',
 ]
@@ -246,10 +260,11 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # ============= REDIRECT URLs =============
-# LOGIN_REDIRECT_URL = 'http://127.0.0.1:5173/'
 FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'http://localhost:5173')
-LOGIN_REDIRECT_URL = None  # Don't use default redirect, force adapter
+LOGIN_REDIRECT_URL = os.environ.get('FRONTEND_BASE_URL', 'http://localhost:5173')
 
 SOCIALACCOUNT_ADAPTER = 'users.adapter.CustomSocialAccountAdapter'
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = False
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'

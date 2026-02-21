@@ -26,6 +26,7 @@ const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(mo
 const ReturnPolicyPage = lazy(() => import('./pages/ReturnPolicyPage').then(module => ({ default: module.ReturnPolicyPage })));
 const RefundPolicyPage = lazy(() => import('./pages/RefundPolicyPage').then(module => ({ default: module.RefundPolicyPage })));
 const ShippingPolicyPage = lazy(() => import('./pages/ShippingPolicyPage').then(module => ({ default: module.ShippingPolicyPage })));
+import { TermsConditionsPage } from './pages/TermsConditionsPage';
 
 // Loading Fallback
 const PageLoader = () => (
@@ -242,6 +243,14 @@ function App() {
               element={
                 <CustomerRoute>
                   <ShippingPolicyPage />
+                </CustomerRoute>
+              }
+            />
+            <Route
+              path="/terms-conditions"
+              element={
+                <CustomerRoute>
+                  <TermsConditionsPage />
                 </CustomerRoute>
               }
             />

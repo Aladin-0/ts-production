@@ -66,8 +66,8 @@ export const ServiceHistoryPage: React.FC = () => {
       try {
         // Fetch both service requests and job sheets
         const [servicesRes, jobSheetsRes] = await Promise.all([
-          apiClient.get('/services/api/requests/history/'),
-          apiClient.get('/services/api/job-sheets/')
+          apiClient.get('/api/requests/history/'),
+          apiClient.get('/api/job-sheets/')
         ]);
         
         if (!mounted) return;
@@ -102,7 +102,7 @@ export const ServiceHistoryPage: React.FC = () => {
     // Optimistically refresh to reflect rating changes
     setLoading(true);
     apiClient
-      .get('/services/api/requests/history/')
+      .get('/api/requests/history/')
       .then((res) => setRequests(res.data))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -111,7 +111,7 @@ export const ServiceHistoryPage: React.FC = () => {
   // Refresh job sheets after approval/decline - NEW
   const handleJobSheetUpdate = async () => {
     try {
-      const res = await apiClient.get('/services/api/job-sheets/');
+      const res = await apiClient.get('/api/job-sheets/');
       setJobSheets(res.data);
     } catch (error) {
       console.error('Error refreshing job sheets:', error);

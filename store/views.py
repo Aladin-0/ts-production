@@ -1,4 +1,4 @@
-# store/views.py - Updated with ProductDetailAPIView
+# store/views.py - Updated with ProductDetailAPIView and delete_product
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -6,7 +6,7 @@ from .models import Product, Order, OrderItem, Address
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import (
-    ProductSerializer, ProductDetailSerializer, AddressSerializer, 
+    ProductSerializer, ProductDetailSerializer, AddressSerializer,
     AddressCreateUpdateSerializer, OrderSerializer
 )
 from rest_framework import generics, permissions, status
@@ -36,20 +36,20 @@ def product_detail(request, slug):
 @login_required
 def buy_now(request, slug):
     product = get_object_or_404(Product, slug=slug, is_active=True)
-    
+
     # Check stock
     if product.stock <= 0:
         return redirect('product_detail', slug=slug)
-    
+
     order = Order.objects.create(customer=request.user, status='PENDING')
-    
+
     order_item = OrderItem.objects.create(
         order=order,
         product=product,
         quantity=1,
         price=product.price
     )
-    
+
     return redirect('select_address', order_id=order.id)
 
 @login_required
@@ -82,7 +82,7 @@ def payment_page(request, order_id):
 @login_required
 def confirm_order(request, order_id):
     order = get_object_or_404(Order, id=order_id, customer=request.user)
-    
+
     # Reduce stock for each item
     for item in order.items.all():
         if item.product.stock >= item.quantity:
@@ -91,7 +91,7 @@ def confirm_order(request, order_id):
         else:
             # Handle insufficient stock
             return redirect('payment_page', order_id=order.id)
-    
+
     order.status = 'PROCESSING'
     order.save()
     return redirect('order_successful', order_id=order.id)
@@ -130,10 +130,10 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProductDetailSerializer
     lookup_field = 'slug'
     permission_classes = [permissions.AllowAny]
-    
+
     def get_queryset(self):
         return Product.objects.filter(is_active=True).select_related('category').prefetch_related('additional_images', 'specifications')
-    
+
     def get_object(self):
         slug = self.kwargs.get('slug')
         try:
@@ -157,10 +157,10 @@ class AddressCreateAPIView(generics.CreateAPIView):
 class AddressUpdateAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = AddressCreateUpdateSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get_queryset(self):
         return Address.objects.filter(user=self.request.user)
-    
+
     def get_object(self):
         queryset = self.get_queryset()
         address_id = self.kwargs.get('pk')
@@ -168,24 +168,24 @@ class AddressUpdateAPIView(generics.RetrieveUpdateAPIView):
 
 class AddressDeleteAPIView(generics.DestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get_queryset(self):
         return Address.objects.filter(user=self.request.user)
-    
+
     def get_object(self):
         queryset = self.get_queryset()
         address_id = self.kwargs.get('pk')
         return get_object_or_404(queryset, id=address_id)
-    
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        
+
         # Don't allow deletion of default address if it's the only one
         if instance.is_default:
             user_addresses = Address.objects.filter(user=request.user)
             if user_addresses.count() == 1:
                 return Response(
-                    {'error': 'Cannot delete the only address'}, 
+                    {'error': 'Cannot delete the only address'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             elif user_addresses.count() > 1:
@@ -193,14 +193,14 @@ class AddressDeleteAPIView(generics.DestroyAPIView):
                 next_address = user_addresses.exclude(id=instance.id).first()
                 next_address.is_default = True
                 next_address.save()
-        
+
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class UserOrdersListView(generics.ListAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get_queryset(self):
         return Order.objects.filter(
             customer=self.request.user
@@ -213,7 +213,7 @@ class UserOrdersListView(generics.ListAPIView):
 class OrderDetailView(generics.RetrieveAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get_queryset(self):
         return Order.objects.filter(customer=self.request.user)
 
@@ -229,36 +229,36 @@ def create_order(request):
         product_slug = request.data.get('product_slug')
         quantity = request.data.get('quantity', 1)
         address_id = request.data.get('address_id')
-        
+
         if not all([product_slug, address_id]):
             return Response(
-                {'error': 'Product and address are required'}, 
+                {'error': 'Product and address are required'},
                 status=400
             )
-        
+
         # Get address
         address = get_object_or_404(Address, id=address_id, user=request.user)
-        
+
         # Get product with lock to prevent race conditions
         try:
             product = Product.objects.select_for_update().get(slug=product_slug, is_active=True)
         except Product.DoesNotExist:
             return Response({'error': 'Product not found'}, status=404)
-        
+
         # Check stock
         if product.stock < quantity:
             return Response(
-                {'error': f'Only {product.stock} items available in stock'}, 
+                {'error': f'Only {product.stock} items available in stock'},
                 status=400
             )
-        
+
         # Create order
         order = Order.objects.create(
             customer=request.user,
             status='PENDING',
             shipping_address=address
         )
-        
+
         # Create order item
         OrderItem.objects.create(
             order=order,
@@ -266,24 +266,11 @@ def create_order(request):
             quantity=quantity,
             price=product.price
         )
-        
-        # OPTIONAL: Deduct stock immediately to reserve it?
-        # Usually good practice to deduct on confirmation, but for "buy now" flows often better to reserve.
-        # However, checking against user request: "Don't reduce stock until order is confirmed"
-        # So we release the lock here without deducting.
-        # But wait, without deducting, the lock is useless once transaction ends!
-        # If we don't deduct stock, next request sees same stock.
-        # Recommendation: Deduct stock on PENDING state (Reservation) and return it if Cancelled/Timed out.
-        # OR: Don't lock if we don't deduct.
-        # Since the code comment said "Don't reduce stock until order is confirmed", I will respect that logic 
-        # but warn that it allows overselling. 
-        # To strictly fix "braking" bug, we SHOULD deduct or reserve.
-        # For now, I'll stick to the existing logic but keep the transaction to ensure atomicity of order+item creation.
-        
+
         # Serialize and return
         serializer = OrderSerializer(order)
         return Response(serializer.data, status=201)
-        
+
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
@@ -357,25 +344,25 @@ def cancel_order(request, order_id):
     """
     try:
         order = get_object_or_404(Order, id=order_id, customer=request.user)
-        
+
         if order.status not in ['PENDING', 'PROCESSING']:
             return Response(
-                {'error': 'Order cannot be cancelled'}, 
+                {'error': 'Order cannot be cancelled'},
                 status=400
             )
-        
+
         # If order was processing, restore stock
         if order.status == 'PROCESSING':
             for item in order.items.all():
                 item.product.stock += item.quantity
                 item.product.save()
-        
+
         order.status = 'CANCELLED'
         order.save()
-        
+
         serializer = OrderSerializer(order)
         return Response(serializer.data)
-        
+
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
@@ -386,20 +373,46 @@ def delete_product_image(request, image_id):
     try:
         from .models import ProductImage
         image = ProductImage.objects.get(id=image_id)
-        
+
         # Delete the actual file
         if image.image:
             if os.path.isfile(image.image.path):
                 os.remove(image.image.path)
-        
+
         # Delete the database record
         image.delete()
-        
+
         return JsonResponse({'success': True})
     except ProductImage.DoesNotExist:
         return JsonResponse({'error': 'Image not found'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+@api_view(['POST', 'DELETE'])
+@permission_classes([permissions.IsAdminUser])
+def delete_product(request, product_id):
+    """Delete a product from admin panel"""
+    try:
+        product = Product.objects.get(id=product_id)
+        
+        # Delete product images from disk
+        if product.image:
+            if os.path.isfile(product.image.path):
+                os.remove(product.image.path)
+        
+        # Delete additional images
+        for img in product.additional_images.all():
+            if img.image and os.path.isfile(img.image.path):
+                os.remove(img.image.path)
+        
+        # Delete the product (cascade will delete related objects)
+        product.delete()
+        
+        return Response({'success': True, 'message': 'Product deleted successfully'}, status=200)
+    except Product.DoesNotExist:
+        return Response({'error': 'Product not found'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
@@ -407,34 +420,24 @@ def get_assigned_services(request):
     """Get services assigned to technician with job sheet status"""
     if request.user.role != 'TECHNICIAN':
         return Response({'error': 'Unauthorized'}, status=403)
-    
+
     # Get services with related data including JobSheet via reverse relation
-    # Assuming related_name='job_sheet' or implicit related name
-    # We use prefetch_related for reverse relationships generally
     services = ServiceRequest.objects.filter(
         technician=request.user
     ).select_related(
-        'customer', 
-        'service_category', 
+        'customer',
+        'service_category',
         'service_location',
         'issue'
     ).prefetch_related('job_sheet')
-    
+
     services_data = []
     for service in services:
-        # Access the related job_sheet safely without new query
-        # Since it's a reverse relation (OneToOne or ForeignKey), accessing it might trigger query if not careful
-        # But if we use hasattr, we can check.
-        # Or better, just try/except but rely on prefetch_related cache if possible.
-        # Actually, for reverse OneToOne, 'service.job_sheet' works.
-        # If it doesn't exist, it raises RelatedObjectDoesNotExist (a subclass of DoesNotExist)
-        
         has_job_sheet = False
         job_sheet_status = None
         job_sheet_id = None
 
         try:
-            # If JobSheet has OneToOneField(ServiceRequest, related_name='job_sheet')
             if hasattr(service, 'job_sheet'):
                 job_sheet = service.job_sheet
                 has_job_sheet = True
@@ -442,7 +445,7 @@ def get_assigned_services(request):
                 job_sheet_id = job_sheet.id
         except Exception:
              pass
-        
+
         service_data = {
             'id': service.id,
             'customer': {
@@ -469,6 +472,5 @@ def get_assigned_services(request):
             'job_sheet_id': job_sheet_id,
         }
         services_data.append(service_data)
-    
+
     return Response(services_data)
-    

@@ -290,8 +290,8 @@ export const PrivacyPolicyPage: React.FC = () => {
                     <InfoBox>
                         <p><strong>Techverse Services</strong></p>
                         <p><strong>Grievance Officer / Data Protection Contact:</strong></p>
-                        <p>Email: support@techverse.com</p>
-                        <p>Phone: +1 (555) 123-4567</p>
+                        <p>Email: contact@techverseservices.in</p>
+                        <p>Phone: +91 8805147490 </p>
                         <p>Address: Shop No.5, Costa Mapple, Near Government Engineering College, Usmanpura, Chh. Sambhajinagar. 431001</p>
                     </InfoBox>
                     <p>We will respond to your request within a reasonable timeframe as per applicable law.</p>

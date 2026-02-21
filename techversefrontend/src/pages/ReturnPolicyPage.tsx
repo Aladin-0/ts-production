@@ -114,29 +114,7 @@ export const ReturnPolicyPage: React.FC = () => {
                 </Section>
 
                 <Section>
-                    <h2>3. Non-Returnable Items</h2>
-                    <p>Certain types of items cannot be returned, including:</p>
-                    <ul>
-                        <li>Custom-configured PCs or servers (unless dead on arrival).</li>
-                        <li>Software licenses that have been activated or seal broken.</li>
-                        <li>Perishable goods or hazardous materials.</li>
-                        <li>Gift cards.</li>
-                    </ul>
-                </Section>
-
-                <Section>
-                    <h2>4. Initiating a Return</h2>
-                    <p>
-                        To start a return, you can contact us at <strong style={{ color: 'white' }}>support@techverse.com</strong>.
-                    </p>
-                    <p>
-                        If your return is accepted, we will send you a return shipping label, or instructions on how and where to send your package.
-                        Items sent back to us without first requesting a return will not be accepted.
-                    </p>
-                </Section>
-
-                <Section>
-                    <h2>5. Damages and Issues</h2>
+                    <h2>3. Damages and Issues</h2>
                     <p>
                         Please inspect your order upon reception and contact us immediately if the item is defective, damaged, or if you receive the wrong item,
                         so that we can evaluate the issue and make it right immediately.
@@ -147,7 +125,7 @@ export const ReturnPolicyPage: React.FC = () => {
 
                 <Section>
                     <p>
-                        For any return-related questions, please contact us at support@techverse.com.
+                        For any return-related questions, please contact us at contact@techverseservices.in.
                     </p>
                 </Section>
             </ContentWrapper>

@@ -260,9 +260,9 @@ export const Footer: React.FC = () => {
           <Grid size={{ xs: 12, sm: 12, md: 3 }}>
             <FooterSection>
               <Typography variant="h4">Get In Touch</Typography>
-              <ContactItem href="mailto:support@techverse.com">
+              <ContactItem href="mailto:contact@techverseservices.in">
                 <EmailIcon />
-                <span>support@techverse.com</span>
+                <span>contact@techverseservices.in</span>
               </ContactItem>
               <ContactItem href="tel:+918805147490">
                 <PhoneIcon />
@@ -297,6 +297,9 @@ export const Footer: React.FC = () => {
           </FooterLink>
           <FooterLink onClick={() => navigate('/shipping-policy')} style={{ display: 'inline', margin: 0, fontSize: '12px' }}>
             Shipping Policy
+          </FooterLink>
+          <FooterLink onClick={() => navigate('/terms-conditions')} style={{ display: 'inline', margin: 0, fontSize: '12px' }}>
+            Terms & Conditions
           </FooterLink>
         </Box>
         <PaymentIcons>

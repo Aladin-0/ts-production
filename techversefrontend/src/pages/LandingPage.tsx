@@ -41,7 +41,7 @@ const PageWrapper = styled(Box)({
 // ==================== HERO SECTION STYLES ====================
 // Main hero section wrapper with background image
 const HeroSection = styled(Box)({
-  backgroundImage: 'url("/src/assets/hero-bg.png")',
+  backgroundImage: 'url("/hero-bg.png")',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
@@ -1172,14 +1172,14 @@ function GamingPC({ isMobile, ...props }: any) {
 // ==================== DATA CONFIGURATION ====================
 // Category data with images and hover colors
 const categories = [
-  { name: 'Laptop / PC', image: '/src/assets/laptop.jpg', hoverColor: 'rgba(59, 130, 246, 0.1)' },
-  { name: 'Printer', image: '/src/assets/Printer.png', hoverColor: 'rgba(16, 185, 129, 0.1)' },
-  { name: 'Keyboard', image: '/src/assets/Keyboard.png', hoverColor: 'rgba(139, 92, 246, 0.1)' },
-  { name: 'Mouse', image: '/src/assets/Mouse.jpeg', hoverColor: 'rgba(245, 101, 101, 0.1)' },
-  { name: 'Monitor', image: '/src/assets/Monitor.jpg', hoverColor: 'rgba(251, 191, 36, 0.1)' },
-  { name: 'CCTV / Analog', image: '/src/assets/CCTV.jpg', hoverColor: 'rgba(236, 72, 153, 0.1)' },
-  { name: 'Headphones', image: '/src/assets/Headphones.jpg', hoverColor: 'rgba(6, 182, 212, 0.1)' },
-  { name: 'Refurbished', image: '/src/assets/Refurbished.jpg', hoverColor: 'rgba(34, 197, 94, 0.1)' },
+  { name: 'Laptop / PC', image: '/laptop.jpg', hoverColor: 'rgba(59, 130, 246, 0.1)' },
+  { name: 'Printer', image: '/Printer.png', hoverColor: 'rgba(16, 185, 129, 0.1)' },
+  { name: 'Keyboard', image: '/Keyboard.png', hoverColor: 'rgba(139, 92, 246, 0.1)' },
+  { name: 'Mouse', image: '/Mouse.jpeg', hoverColor: 'rgba(245, 101, 101, 0.1)' },
+  { name: 'Monitor', image: '/Monitor.jpg', hoverColor: 'rgba(251, 191, 36, 0.1)' },
+  { name: 'CCTV / Analog', image: '/CCTV.jpg', hoverColor: 'rgba(236, 72, 153, 0.1)' },
+  { name: 'Headphones', image: '/Headphones.jpg', hoverColor: 'rgba(6, 182, 212, 0.1)' },
+  { name: 'Refurbished', image: '/Refurbished.jpg', hoverColor: 'rgba(34, 197, 94, 0.1)' },
 ];
 
 // ==================== END DATA CONFIGURATION ====================
@@ -1297,14 +1297,14 @@ const AnimatedCategoryCard = ({ category }) => {
 // ==================== DATA CONFIGURATION ====================
 // Product categories for "Shop by Category" section
 const productCategories = [
-  { name: 'Laptop / PC', image: '/src/assets/laptop.jpg', hoverColor: 'rgba(59, 130, 246, 0.1)' },
-  { name: 'Printer', image: '/src/assets/Printer.png', hoverColor: 'rgba(16, 185, 129, 0.1)' },
-  { name: 'Keyboard', image: '/src/assets/Keyboard.png', hoverColor: 'rgba(139, 92, 246, 0.1)' },
-  { name: 'Mouse', image: '/src/assets/Mouse.jpeg', hoverColor: 'rgba(245, 101, 101, 0.1)' },
-  { name: 'Monitor', image: '/src/assets/Monitor.jpg', hoverColor: 'rgba(251, 191, 36, 0.1)' },
-  { name: 'CCTV / Analog', image: '/src/assets/CCTV.jpg', hoverColor: 'rgba(236, 72, 153, 0.1)' },
-  { name: 'Headphones', image: '/src/assets/Headphones.jpg', hoverColor: 'rgba(6, 182, 212, 0.1)' },
-  { name: 'Refurbished', image: '/src/assets/Refurbished.jpg', hoverColor: 'rgba(34, 197, 94, 0.1)' },
+  { name: 'Laptop / PC', image: '/laptop.jpg', hoverColor: 'rgba(59, 130, 246, 0.1)' },
+  { name: 'Printer', image: '/Printer.png', hoverColor: 'rgba(16, 185, 129, 0.1)' },
+  { name: 'Keyboard', image: '/Keyboard.png', hoverColor: 'rgba(139, 92, 246, 0.1)' },
+  { name: 'Mouse', image: '/Mouse.jpeg', hoverColor: 'rgba(245, 101, 101, 0.1)' },
+  { name: 'Monitor', image: '/Monitor.jpg', hoverColor: 'rgba(251, 191, 36, 0.1)' },
+  { name: 'CCTV / Analog', image: '/CCTV.jpg', hoverColor: 'rgba(236, 72, 153, 0.1)' },
+  { name: 'Headphones', image: '/Headphones.jpg', hoverColor: 'rgba(6, 182, 212, 0.1)' },
+  { name: 'Refurbished', image: '/Refurbished.jpg', hoverColor: 'rgba(34, 197, 94, 0.1)' },
 ];
 
 // ==================== END DATA CONFIGURATION ====================

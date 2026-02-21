@@ -10,7 +10,7 @@ export const RatingDebug: React.FC = () => {
 
     const testEndpoint = async () => {
         try {
-            const response = await apiClient.get('/services/api/ratings/test/');
+            const response = await apiClient.get('/api/ratings/test/');
             setTestResult(JSON.stringify(response.data, null, 2));
         } catch (error: any) {
             setTestResult(`Error: ${error.message}\nResponse: ${JSON.stringify(error.response?.data, null, 2)}`);
@@ -27,7 +27,7 @@ export const RatingDebug: React.FC = () => {
 
 
 
-            const response = await apiClient.post('/services/api/ratings/create/', payload);
+            const response = await apiClient.post('/api/ratings/create/', payload);
             setTestResult(`Success: ${JSON.stringify(response.data, null, 2)}`);
         } catch (error: any) {
             console.error('Rating submission error:', error);

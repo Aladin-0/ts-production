@@ -463,7 +463,7 @@ export const ServiceRequestPage: React.FC = () => {
         service_location: selectedAddress,
       };
 
-      const response = await apiClient.post('/services/api/requests/create/', requestData);
+      const response = await apiClient.post('/api/requests/create/', requestData);
 
 
       enqueueSnackbar('Service request submitted successfully!', { variant: 'success' });

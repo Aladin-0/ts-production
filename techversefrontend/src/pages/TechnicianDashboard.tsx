@@ -256,7 +256,7 @@ export const TechnicianDashboard: React.FC = () => {
   const handleUpdateStatus = async (type: 'order' | 'service', id: number) => {
     const url = type === 'order'
       ? `/api/technician/complete-order/${id}/`
-      : `/services/api/service-requests/${id}/complete/`;
+      : `/api/service-requests/${id}/complete/`;
     const successMessage = type === 'order' ? 'Order marked as delivered!' : 'Service marked as completed!';
     const errorMessage = type === 'order' ? 'Failed to complete order' : 'Failed to complete service';
 

@@ -1,11 +1,5 @@
-// src/api.ts - Updated to properly handle sessions
+// src/api.ts - Updated to fetch CSRF token from API
 import axios from 'axios';
-// Helper to read cookie value by name
-function getCookie(name: string): string | null {
-    if (typeof document === 'undefined') return null;
-    const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + '=([^;]*)'));
-    return match ? decodeURIComponent(match[1]) : null;
-}
 
 // Helper to get API URL from env
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -18,21 +12,43 @@ const apiClient = axios.create({
     },
 });
 
-// This interceptor adds the auth token to every request
-apiClient.interceptors.request.use((config) => {
+// Cache for CSRF token
+let csrfTokenCache: string | null = null;
+
+// Function to fetch CSRF token from API
+async function fetchCSRFToken(): Promise<string> {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/users/csrf/`, {
+            withCredentials: true
+        });
+        csrfTokenCache = response.data.csrfToken;
+        return csrfTokenCache;
+    } catch (error) {
+        console.error('Failed to fetch CSRF token:', error);
+        return '';
+    }
+}
+
+// This interceptor adds the auth token and CSRF token to every request
+apiClient.interceptors.request.use(async (config) => {
+    // Add JWT token if available (for backward compatibility)
     const token = localStorage.getItem('access_token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
-    // Attach CSRF token for unsafe methods if not using JWT
+
+    // Attach CSRF token for unsafe methods
     const method = (config.method || 'get').toUpperCase();
     const unsafe = method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS';
-    if (unsafe && !token) {
-        const csrfToken = getCookie('csrftoken');
+    
+    if (unsafe) {
+        // Fetch fresh CSRF token for each unsafe request
+        const csrfToken = await fetchCSRFToken();
         if (csrfToken) {
             config.headers['X-CSRFToken'] = csrfToken;
         }
     }
+    
     return config;
 });
 
@@ -42,11 +58,10 @@ apiClient.interceptors.response.use(
     (error) => {
         if (error.response?.status === 401) {
             // If JWT token is invalid or expired, remove it
-            // Don't automatically logout - let session auth try
             const token = localStorage.getItem('access_token');
             if (token) {
                 localStorage.removeItem('access_token');
-
+                localStorage.removeItem('refresh_token');
             }
         }
         return Promise.reject(error);

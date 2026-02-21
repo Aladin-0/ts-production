@@ -1,11 +1,11 @@
 # users/views.py - Enhanced version with proper profile management
 
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from django.http import JsonResponse, HttpResponse
-from django.middleware.csrf import get_token 
+from django.middleware.csrf import get_token
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -37,7 +37,7 @@ def customer_registration(request):
             return redirect('product_list')
     else:
         form = CustomerRegistrationForm()
-    
+
     return render(request, 'users/registration.html', {'form': form})
 
 @login_required
@@ -58,21 +58,21 @@ def add_address(request):
             return redirect(next_page)
     else:
         form = AddressForm()
-    
+
     return render(request, 'users/add_address.html', {'form': form})
 
 @login_required
 def technician_dashboard(request):
     if request.user.role != 'TECHNICIAN':
         return redirect('product_list')
-    
+
     technician = request.user
     completed_orders = Order.objects.filter(technician=technician, status='DELIVERED').count()
     completed_services = ServiceRequest.objects.filter(technician=technician, status='COMPLETED').count()
     total_jobs = completed_orders + completed_services
     ratings = TechnicianRating.objects.filter(technician=technician).order_by('-created_at')
     average_rating = ratings.aggregate(Avg('rating'))
-    
+
     context = {
         'total_jobs': total_jobs,
         'average_rating': average_rating['rating__avg'],
@@ -113,104 +113,99 @@ class UserProfileUpdateView(APIView):
 
     def patch(self, request):
         """Update user profile"""
-
-        
         serializer = UserProfileUpdateSerializer(
-            request.user, 
-            data=request.data, 
+            request.user,
+            data=request.data,
             partial=True
         )
-        
+
         if serializer.is_valid():
             user = serializer.save()
-
-            
             # Return updated user data
             updated_serializer = UserSerializer(user)
             return Response(updated_serializer.data)
-        
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangePasswordView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def post(self, request):
         """Change user password"""
         current_password = request.data.get('current_password')
         new_password = request.data.get('new_password')
-        
+
         if not current_password or not new_password:
             return Response(
-                {'error': 'Both current and new passwords are required'}, 
+                {'error': 'Both current and new passwords are required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         user = request.user
-        
+
         if not user.check_password(current_password):
             return Response(
-                {'error': 'Current password is incorrect'}, 
+                {'error': 'Current password is incorrect'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         if len(new_password) < 8:
             return Response(
-                {'error': 'New password must be at least 8 characters long'}, 
+                {'error': 'New password must be at least 8 characters long'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         user.set_password(new_password)
         user.save()
-        
+
         return Response({'message': 'Password changed successfully'})
 
 class DeleteAccountView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def delete(self, request):
         """Delete user account"""
         password = request.data.get('password')
-        
+
         if not password:
             return Response(
-                {'error': 'Password is required to delete account'}, 
+                {'error': 'Password is required to delete account'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         user = request.user
-        
+
         if not user.check_password(password):
             return Response(
-                {'error': 'Incorrect password'}, 
+                {'error': 'Incorrect password'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         user.is_active = False
         user.save()
-        
+
         return Response({'message': 'Account deactivated successfully'})
 
 class ProfileValidationView(APIView):
     """Check if user profile is complete for checkout"""
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get(self, request):
         user = request.user
         missing_fields = []
-        
+
         if not user.name or user.name.strip() == '':
             missing_fields.append('name')
-        
+
         if not user.phone or user.phone.strip() == '':
             missing_fields.append('phone')
-        
+
         # Check if user has at least one address
         from store.models import Address
         addresses = Address.objects.filter(user=user)
         if not addresses.exists():
             missing_fields.append('address')
-        
+
         return Response({
             'is_complete': len(missing_fields) == 0,
             'missing_fields': missing_fields,
@@ -218,15 +213,43 @@ class ProfileValidationView(APIView):
         })
 
 @method_decorator(csrf_exempt, name='dispatch')
+class LogoutView(APIView):
+    """
+    Logout endpoint that clears session and tokens
+    """
+    permission_classes = []  # No auth required to logout
+    authentication_classes = []  # Disable authentication checks
+
+    def post(self, request):
+        try:
+            # Clear Django session
+            if request.user.is_authenticated:
+                django_logout(request)
+
+            response = Response({
+                'success': True,
+                'message': 'Logged out successfully'
+            })
+
+            # Clear session cookie
+            response.delete_cookie('sessionid', domain=None, path='/')
+            response.delete_cookie('csrftoken', domain=None, path='/')
+
+            return response
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=500)
+
+@method_decorator(csrf_exempt, name='dispatch')
 class GoogleJWTTokenView(APIView):
     """
     Generate JWT tokens for users authenticated via Google OAuth session
     """
     permission_classes = []  # No auth required since we're checking session
-    
-    def get(self, request):
 
-        
+    def get(self, request):
         # Check if user is authenticated via session (from Google OAuth)
         if not request.user.is_authenticated:
             return Response({
@@ -237,19 +260,19 @@ class GoogleJWTTokenView(APIView):
                     'cookies': dict(request.COOKIES),
                 }
             }, status=401)
-        
+
         user = request.user
-        
+
         # Generate JWT tokens for the authenticated user
         refresh = RefreshToken.for_user(user)
-        
+
         return Response({
             'access': str(refresh.access_token),
             'refresh': str(refresh),
             'user': UserSerializer(user).data,
             'success': True
         })
-    
+
     def options(self, request, *args, **kwargs):
         """Handle preflight CORS requests"""
         frontend_url = getattr(settings, 'FRONTEND_BASE_URL', 'http://localhost:5173')
@@ -263,7 +286,7 @@ class GoogleJWTTokenView(APIView):
 class DebugAuthView(APIView):
     """Debug view to check authentication status"""
     permission_classes = []
-    
+
     def get(self, request):
         return Response({
             'user_authenticated': request.user.is_authenticated,
@@ -284,10 +307,10 @@ def create_user_from_google(request):
         data = json.loads(request.body)
         email = data.get('email')
         name = data.get('name')
-        
+
         if not email or not name:
             return JsonResponse({'error': 'Email and name are required'}, status=400)
-        
+
         user, created = User.objects.get_or_create(
             email=email,
             defaults={
@@ -295,13 +318,13 @@ def create_user_from_google(request):
                 'role': 'CUSTOMER'
             }
         )
-        
+
         if not created and user.name != name:
             user.name = name
             user.save()
-        
+
         refresh = RefreshToken.for_user(user)
-        
+
         return JsonResponse({
             'success': True,
             'access': str(refresh.access_token),
@@ -315,7 +338,7 @@ def create_user_from_google(request):
                 'sms_notifications': getattr(user, 'sms_notifications', True),
             }
         })
-        
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
@@ -328,10 +351,10 @@ def google_login_success(request):
         # Check if user is authenticated via session
         if request.user.is_authenticated:
             user = request.user
-            
+
             # Generate JWT tokens
             refresh = RefreshToken.for_user(user)
-            
+
             # Create response with tokens embedded in JavaScript
             response_html = f"""
             <!DOCTYPE html>
@@ -344,7 +367,7 @@ def google_login_success(request):
                     // Store tokens in localStorage
                     localStorage.setItem('access_token', '{refresh.access_token}');
                     localStorage.setItem('refresh_token', '{refresh}');
-                    
+
                     // Store user data
                     const userData = {json.dumps({
                         'id': user.id,
@@ -354,7 +377,7 @@ def google_login_success(request):
                         'email_notifications': user.email_notifications,
                         'sms_notifications': user.sms_notifications,
                     })};
-                    
+
                     // Post message to parent window (React app)
                     if (window.opener) {{
                         window.opener.postMessage({{
@@ -379,7 +402,7 @@ def google_login_success(request):
             return HttpResponse(response_html)
         else:
             return HttpResponse("Not authenticated", status=401)
-    
+
     return HttpResponse("Method not allowed", status=405)
 
 
@@ -406,18 +429,18 @@ def mobile_google_callback(request):
     # Get the state and code from Google
     state = request.GET.get('state')
     code = request.GET.get('code')
-    
+
     frontend_url = getattr(settings, 'FRONTEND_BASE_URL', 'http://localhost:5173')
-    
+
     if not state or not code:
         return HttpResponseRedirect(f'{frontend_url}/login?error=oauth_failed')
-    
+
     # Redirect to the standard allauth callback with proper headers
     callback_url = f"/accounts/google/login/callback/?state={state}&code={code}"
     response = HttpResponseRedirect(callback_url)
-    
+
     # Ensure cookies are set for mobile
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response['Pragma'] = 'no-cache'
-    
+
     return response

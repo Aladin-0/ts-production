@@ -37,8 +37,6 @@ export const useUserStore = create<UserState>((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-
-
       const response = await apiClient.post('/api/auth/login/', {
         email,
         password
@@ -51,8 +49,6 @@ export const useUserStore = create<UserState>((set, get) => ({
       if (refresh) {
         localStorage.setItem('refresh_token', refresh);
       }
-
-
 
       // Sync cart for this user
       import('./cartStore').then(({ useCartStore }) => {
@@ -67,8 +63,6 @@ export const useUserStore = create<UserState>((set, get) => ({
       });
 
     } catch (error: any) {
-
-
       const errorMessage = error.response?.data?.detail ||
         error.response?.data?.non_field_errors?.[0] ||
         'Login failed. Please check your credentials.';
@@ -85,7 +79,12 @@ export const useUserStore = create<UserState>((set, get) => ({
   },
 
   logout: async () => {
-
+    try {
+      // First, logout from Django session (clears session cookie)
+      await apiClient.post('/api/users/logout-session/');  // Changed from /api/auth/logout/
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
 
     // Clear JWT tokens
     localStorage.removeItem('access_token');
@@ -96,14 +95,6 @@ export const useUserStore = create<UserState>((set, get) => ({
       useCartStore.getState().switchUser(null);
     }).catch(() => { });
 
-    // Also logout from Django session
-    try {
-      await apiClient.post('/api/auth/logout/');
-
-    } catch (error) {
-
-    }
-
     set({
       user: null,
       isAuthenticated: false,
@@ -111,22 +102,19 @@ export const useUserStore = create<UserState>((set, get) => ({
       error: null
     });
 
-
+    // Force redirect to home page after logout to clear all state
+    window.location.href = '/';
   },
 
   checkAuthStatus: async () => {
-
-
     set({ loading: true });
 
     // First try JWT token
     const token = localStorage.getItem('access_token');
 
-
     if (token) {
       try {
         const response = await apiClient.get('/api/auth/user/');
-
 
         // Sync cart for this user
         import('./cartStore').then(({ useCartStore }) => {
@@ -141,7 +129,6 @@ export const useUserStore = create<UserState>((set, get) => ({
         });
         return;
       } catch (error) {
-
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
       }
@@ -149,7 +136,6 @@ export const useUserStore = create<UserState>((set, get) => ({
 
     // If JWT fails, try session authentication
     try {
-
       const response = await fetch(`${API_BASE_URL}/api/auth/user/`, {
         method: 'GET',
         credentials: 'include',
@@ -160,7 +146,6 @@ export const useUserStore = create<UserState>((set, get) => ({
 
       if (response.ok) {
         const userData = await response.json();
-
 
         // Sync cart for this user
         import('./cartStore').then(({ useCartStore }) => {
@@ -180,16 +165,12 @@ export const useUserStore = create<UserState>((set, get) => ({
         } catch (e) { }
 
         return;
-      } else {
-
       }
     } catch (error) {
-
+      // Silent fail
     }
 
     // If both fail, user is not authenticated
-
-
     // Clear cart when auth fails
     import('./cartStore').then(({ useCartStore }) => {
       useCartStore.getState().switchUser(null);
@@ -207,19 +188,14 @@ export const useUserStore = create<UserState>((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-
-
       // Try JWT first; on failure, retry via Axios without JWT (session + CSRF)
       let response;
       try {
         response = await apiClient.patch('/api/users/profile/', data);
       } catch (jwtError) {
-
         // Response interceptor should have removed expired token.
         response = await apiClient.patch('/api/users/profile/', data);
       }
-
-
 
       // Update the user state with the response data
       set({
@@ -230,8 +206,6 @@ export const useUserStore = create<UserState>((set, get) => ({
 
       return response.data;
     } catch (error: any) {
-
-
       const errorMessage = error.response?.data?.detail ||
         'Failed to update profile';
 
@@ -262,16 +236,12 @@ export const useUserStore = create<UserState>((set, get) => ({
         });
       }
 
-
-
       set({
         loading: false,
         error: null
       });
 
     } catch (error: any) {
-
-
       const errorMessage = error.response?.data?.detail ||
         error.response?.data?.current_password?.[0] ||
         error.response?.data?.new_password?.[0] ||
@@ -288,8 +258,6 @@ export const useUserStore = create<UserState>((set, get) => ({
 
   setUserFromServer: (user) => {
     // Update store state without triggering any network request
-
-
     // Sync cart for this user
     import('./cartStore').then(({ useCartStore }) => {
       useCartStore.getState().setCurrentUser(user.id.toString());

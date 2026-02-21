@@ -321,6 +321,7 @@ export const NavBar = () => {
       >
         <MenuItem onClick={() => cleanNavigate('/profile')} sx={{ py: 1.5, fontWeight: 600 }}>My Profile</MenuItem>
         <MenuItem onClick={() => cleanNavigate('/my-orders')} sx={{ py: 1.5, fontWeight: 600 }}>Order History</MenuItem>
+        <MenuItem onClick={() => cleanNavigate('/service-history')} sx={{ py: 1.5, fontWeight: 600 }}>Service History</MenuItem>
         <Divider sx={{ bgcolor: 'rgba(255,255,255,0.1)', my: 1 }} />
         <MenuItem onClick={() => { logout(); cleanNavigate('/'); }} sx={{ color: '#f87171', py: 1.5, fontWeight: 700 }}>Logout</MenuItem>
       </Menu>
